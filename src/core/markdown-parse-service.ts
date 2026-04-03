@@ -1,9 +1,9 @@
-import { App, TFile } from "obsidian";
-import type { SettingDatas } from "./setting-datas";
-import { NovelLibraryService } from "./novel-library-service";
+import {App, TFile} from "obsidian";
+import type {SettingDatas} from "./setting-datas";
+import {NovelLibraryService} from "./novel-library-service";
 
 export interface MarkdownParseRequest {
-	settings: Pick<SettingDatas, "novelLibraries">;
+	settings: Pick<SettingDatas, "guidebookCustomDir" | "stickyNoteCustomDir" | "annotationCustomDir" | "timelineCustomDir" | "snippetCustomDir" | "proofreadDictionaryCustomDir">;
 	filePath: string;
 	parserId?: string;
 }
@@ -73,9 +73,23 @@ export class MarkdownParseService {
 			throw new Error("File path cannot be empty.");
 		}
 
-		const normalizedLibraryRoots = this.libraryService.normalizeLibraryRoots(request.settings.novelLibraries);
-		if (!this.libraryService.isPathInLibraries(normalizedFilePath, normalizedLibraryRoots)) {
-			throw new Error(`File is not inside configured novel libraries: ${normalizedFilePath}`);
+		// 检查文件是否在任何自定义目录中
+		const customDirs = [
+			request.settings.guidebookCustomDir,
+			request.settings.stickyNoteCustomDir,
+			request.settings.annotationCustomDir,
+			request.settings.timelineCustomDir,
+			request.settings.snippetCustomDir,
+			request.settings.proofreadDictionaryCustomDir
+		];
+
+		const isInCustomDir = customDirs.some((dir) => {
+			if (!dir) return false;
+			return this.libraryService.isSameOrChildPath(normalizedFilePath, dir);
+		});
+
+		if (!isInCustomDir) {
+			throw new Error(`File is not inside configured custom directories: ${normalizedFilePath}`);
 		}
 
 		const file = this.app.vault.getAbstractFileByPath(normalizedFilePath);
@@ -116,5 +130,3 @@ export class MarkdownParseService {
 		});
 	}
 }
-
-

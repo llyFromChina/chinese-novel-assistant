@@ -1,8 +1,8 @@
 import tseslint from 'typescript-eslint';
 import obsidianmd from "eslint-plugin-obsidianmd";
 import globals from "globals";
-import { globalIgnores } from "eslint/config";
-import { fileURLToPath } from "node:url";
+import {globalIgnores} from "eslint/config";
+import {fileURLToPath} from "node:url";
 
 const tsconfigRootDir = fileURLToPath(new URL(".", import.meta.url));
 type TsEslintConfigParam = Parameters<typeof tseslint.config>[number];

@@ -1,20 +1,8 @@
-import type { Plugin } from "obsidian";
-import { type PluginContext } from "../core";
-import {
-	detachStickyNoteSidebars,
-	openStickyNoteSidebar,
-	syncStickyNoteSidebarWithGuidebook,
-} from "./sticky-note";
-import {
-	detachAnnotationSidebars,
-	openAnnotationSidebar,
-	syncAnnotationSidebarWithGuidebook,
-} from "./annotation";
-import {
-	detachTimelineSidebars,
-	openTimelineSidebar,
-	syncTimelineSidebarWithGuidebook,
-} from "./timeline";
+import type {Plugin} from "obsidian";
+import {type PluginContext} from "../core";
+import {detachStickyNoteSidebars, openStickyNoteSidebar, syncStickyNoteSidebarWithGuidebook,} from "./sticky-note";
+import {detachAnnotationSidebars, openAnnotationSidebar, syncAnnotationSidebarWithGuidebook,} from "./annotation";
+import {detachTimelineSidebars, openTimelineSidebar, syncTimelineSidebarWithGuidebook,} from "./timeline";
 
 export function registerSidebarFeature(plugin: Plugin, ctx: PluginContext): void {
 	plugin.app.workspace.onLayoutReady(() => {

@@ -1,133 +1,82 @@
-import { Notice, Setting, TFolder } from "obsidian";
-import { NovelLibraryService } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { askForConfirmation, attachFolderSuggest } from "../../../ui";
-import { createSettingsSectionHeading } from "./heading";
-import type { SettingsTabRenderContext } from "./types";
-
-const NOVEL_LIBRARY_FEATURE_DIR_NAMES = new Set(["00_功能库", "00-功能库"].map((name) => name.toLowerCase()));
+import {Setting} from "obsidian";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {createSettingsSectionHeading} from "./heading";
+import type {SettingsTabRenderContext} from "./types";
 
 export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { app, ctx, refresh } = deps;
-	const novelLibraryService = new NovelLibraryService(app);
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.global.section.novel_library);
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.global.section.custom_dirs);
 
-	let pendingValue = "";
-	let pendingInputEl: HTMLInputElement | null = null;
 	new Setting(panelEl)
-		.setName(LocalizationConstants.settings.global.novel_library.add.name)
-		.setDesc(LocalizationConstants.settings.global.novel_library.add.desc)
+		.setName(LocalizationConstants.settings.global.custom_dirs.guidebook.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.guidebook.desc)
 		.setClass("cna-settings-item")
 		.addText((text) => {
-			text.setPlaceholder(LocalizationConstants.settings.global.novel_library.add.placeholder);
-			pendingInputEl = text.inputEl;
-			text.onChange((value) => {
-				pendingValue = value;
+			text.setValue(ctx.settings.guidebookCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ guidebookCustomDir: value.trim() });
+				refresh();
 			});
-		})
-		.addButton((button) =>
-			button
-				.setButtonText(LocalizationConstants.settings.common.add)
-				.setCta()
-				.onClick(async () => {
-					const next = pendingValue.trim();
-					if (!next) {
-						return;
-					}
-
-					if (novelLibraryService.hasNovelLibrary(ctx.settings.novelLibraries, next)) {
-						new Notice(LocalizationConstants.settings.global.novel_library.exists);
-						return;
-					}
-
-					try {
-						await novelLibraryService.ensureNovelLibraryStructure(next);
-					} catch (error) {
-						console.error("[Chinese Novel Assistant] Failed to create novel library structure.", error);
-						new Notice(LocalizationConstants.settings.global.novel_library.create_subdirs_failed);
-						return;
-					}
-
-					await ctx.setSettings({
-						novelLibraries: [...ctx.settings.novelLibraries, next],
-					});
-					refresh();
-				}),
-		);
-	if (pendingInputEl) {
-		attachFolderSuggest(app, pendingInputEl, {
-			shouldIncludeFolderPath: (path) =>
-				shouldIncludeNovelLibrarySuggestion(path, normalizedLibraryRoots, novelLibraryService),
 		});
-	}
 
-	for (const libraryPath of ctx.settings.novelLibraries) {
-		const normalizedLibraryPath = novelLibraryService.normalizeVaultPath(libraryPath);
-		const libraryEntry = normalizedLibraryPath ? app.vault.getAbstractFileByPath(normalizedLibraryPath) : null;
-		const isMissingLibrary = !(libraryEntry instanceof TFolder);
-		const librarySetting = new Setting(panelEl)
-			.setName(libraryPath)
-			.setClass("cna-settings-item")
-			.addButton((button) => {
-				button.setButtonText(LocalizationConstants.settings.common.delete).onClick(async () => {
-					const shouldDelete = await askForConfirmation(app, {
-						title: LocalizationConstants.settings.global.novel_library.delete_confirm.title,
-						message: LocalizationConstants.settings.global.novel_library.delete_confirm.message,
-						confirmText: LocalizationConstants.settings.common.delete,
-						cancelText: LocalizationConstants.settings.common.cancel,
-						confirmIsDanger: true,
-					});
-					if (!shouldDelete) {
-						return;
-					}
-
-					await ctx.setSettings({
-						novelLibraries: ctx.settings.novelLibraries.filter((value) => value !== libraryPath),
-					});
-					refresh();
-				});
-				button.buttonEl.addClass("cna-danger-button");
+	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.sticky_note.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.sticky_note.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setValue(ctx.settings.stickyNoteCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ stickyNoteCustomDir: value.trim() });
+				refresh();
 			});
-		librarySetting.settingEl.addClass("cna-settings-item--novel-library");
-		if (isMissingLibrary) {
-			appendMissingNovelLibraryTag(deps, librarySetting);
-		}
-	}
-}
+		});
 
-function appendMissingNovelLibraryTag(deps: SettingsTabRenderContext, setting: Setting): void {
-	const nameEl = setting.settingEl.querySelector<HTMLElement>(".setting-item-name");
-	if (!nameEl) {
-		return;
-	}
+	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.annotation.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.annotation.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setValue(ctx.settings.annotationCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ annotationCustomDir: value.trim() });
+				refresh();
+			});
+		});
 
-	nameEl.createSpan({
-		cls: "cna-settings-missing-library",
-		text: LocalizationConstants.settings.global.novel_library.missing,
-	});
-}
+	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.timeline.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.timeline.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setValue(ctx.settings.timelineCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ timelineCustomDir: value.trim() });
+				refresh();
+			});
+		});
 
+	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.snippet.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.snippet.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setValue(ctx.settings.snippetCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ snippetCustomDir: value.trim() });
+				refresh();
+			});
+		});
 
-function shouldIncludeNovelLibrarySuggestion(
-	path: string,
-	normalizedLibraryRoots: string[],
-	novelLibraryService: NovelLibraryService,
-): boolean {
-	const normalizedPath = novelLibraryService.normalizeVaultPath(path);
-	if (!normalizedPath) {
-		return false;
-	}
-	if (isFeatureLibraryPath(normalizedPath)) {
-		return false;
-	}
-	return !normalizedLibraryRoots.some((root) => novelLibraryService.isSameOrChildPath(normalizedPath, root));
-}
-
-function isFeatureLibraryPath(path: string): boolean {
-	return path
-		.split("/")
-		.filter((segment) => segment.length > 0)
-		.some((segment) => NOVEL_LIBRARY_FEATURE_DIR_NAMES.has(segment.toLowerCase()));
+	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.proofread_dictionary.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.proofread_dictionary.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setValue(ctx.settings.proofreadDictionaryCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ proofreadDictionaryCustomDir: value.trim() });
+				refresh();
+			});
+		});
 }

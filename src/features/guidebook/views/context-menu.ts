@@ -1,10 +1,6 @@
-import { UI } from "../../../core";
-import { showContextMenuAtMouseEvent } from "../../../ui";
-import type {
-	GuidebookTreeFileNode,
-	GuidebookTreeH1Node,
-	GuidebookTreeH2Node,
-} from "../tree-builder";
+import {UI} from "../../../core";
+import {showContextMenuAtMouseEvent} from "../../../ui";
+import type {GuidebookTreeFileNode, GuidebookTreeH1Node, GuidebookTreeH2Node,} from "../tree-builder";
 
 export type GuidebookTreeFileContextAction =
 	| "create_collection"

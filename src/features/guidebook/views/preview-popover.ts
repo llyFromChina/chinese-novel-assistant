@@ -1,9 +1,9 @@
-import { Component, type App, MarkdownRenderer, setIcon } from "obsidian";
-import type { GuidebookKeywordPreviewItem } from "../../../features/text-detection/rules/guidebook-keyword";
-import { UI } from "../../../core";
-import { clamp } from "../../../utils";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { collectGuidebookAliases } from "../alias-utils";
+import {type App, Component, MarkdownRenderer, setIcon} from "obsidian";
+import type {GuidebookKeywordPreviewItem} from "../../../features/text-detection/rules/guidebook-keyword";
+import {UI} from "../../../core";
+import {clamp} from "../../../utils";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {collectGuidebookAliases} from "../alias-utils";
 
 export interface GuidebookPreviewDisplayOptions {
 	width: number;

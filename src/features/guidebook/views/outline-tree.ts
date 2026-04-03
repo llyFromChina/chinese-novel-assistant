@@ -1,6 +1,6 @@
-import { setIcon } from "obsidian";
-import { UI } from "../../../core";
-import type { GuidebookTreeDragMoveRequest } from "../drag-sort-actions";
+import {setIcon} from "obsidian";
+import {UI} from "../../../core";
+import type {GuidebookTreeDragMoveRequest} from "../drag-sort-actions";
 import type {
 	GuidebookTreeData,
 	GuidebookTreeFileNode,
@@ -8,14 +8,14 @@ import type {
 	GuidebookTreeH2Node,
 } from "../tree-builder";
 import {
-	openGuidebookBlankContextMenu,
-	openGuidebookFileContextMenu,
-	openGuidebookH1ContextMenu,
-	openGuidebookH2ContextMenu,
 	type GuidebookContextMenuLabels,
 	type GuidebookTreeFileContextAction,
 	type GuidebookTreeH1ContextAction,
 	type GuidebookTreeH2ContextAction,
+	openGuidebookBlankContextMenu,
+	openGuidebookFileContextMenu,
+	openGuidebookH1ContextMenu,
+	openGuidebookH2ContextMenu,
 } from "./context-menu";
 
 export interface GuidebookTreeViewComponent {

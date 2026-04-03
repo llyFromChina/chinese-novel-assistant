@@ -1,5 +1,5 @@
-import { Annotation, RangeSetBuilder } from "@codemirror/state";
-import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
+import {Annotation, RangeSetBuilder} from "@codemirror/state";
+import {Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate} from "@codemirror/view";
 
 export interface TextDetectionRange {
 	from: number;

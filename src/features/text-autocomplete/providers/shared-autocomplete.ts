@@ -1,8 +1,8 @@
-import { EditorSelection, Prec, type Extension } from "@codemirror/state";
-import { EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import { type SettingDatas } from "../../../core";
-import { CandidatePanelComponent } from "../../../ui";
-import { getLocalizedString } from "../../../utils/localization-helper";
+import {EditorSelection, type Extension, Prec} from "@codemirror/state";
+import {EditorView, ViewPlugin, type ViewUpdate} from "@codemirror/view";
+import {type SettingDatas} from "../../../core";
+import {CandidatePanelComponent} from "../../../ui";
+import {getLocalizedString} from "../../../utils/localization-helper";
 
 export interface TriggerMatch {
 	from: number;

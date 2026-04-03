@@ -1,7 +1,7 @@
-import type { EditorView } from "@codemirror/view";
-import { type SettingDatas } from "../../../core";
-import type { TextDetectionRange, TextDetectionRule } from "../engine";
-import { collectPunctuationIgnoredRanges, isIndexInRanges } from "./markdown-skip-ranges";
+import type {EditorView} from "@codemirror/view";
+import {type SettingDatas} from "../../../core";
+import type {TextDetectionRange, TextDetectionRule} from "../engine";
+import {collectPunctuationIgnoredRanges, isIndexInRanges} from "./markdown-skip-ranges";
 
 interface EnPunctuationRuleConfig {
 	char: string;
@@ -28,7 +28,7 @@ const PUNCTUATION_RULE_CONFIGS: EnPunctuationRuleConfig[] = [
 	{
 		char: ".",
 		enabled: (settings) => settings.proofreadEnglishPeriodEnabled,
-		// 1.2 / 1. 
+		// 1.2 / 1.
 		allowContextRegex: /^(?:\d\.\d.|\d\. .)$/,
 		allowPosition: isLatinLetterBeforePeriod,
 	},

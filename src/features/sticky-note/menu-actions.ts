@@ -1,4 +1,4 @@
-import { applyRichTextCommand, type RichTextCommand } from "../../ui";
+import {applyRichTextCommand, type RichTextCommand} from "../../ui";
 
 export type StickyNoteRichTextCommand = RichTextCommand;
 

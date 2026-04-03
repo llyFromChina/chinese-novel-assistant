@@ -1,12 +1,12 @@
-import { MarkdownView, Notice, TFile, type Plugin } from "obsidian";
-import { type PluginContext, bindVaultChangeWatcher, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
+import {MarkdownView, Notice, type Plugin, TFile} from "obsidian";
+import {bindVaultChangeWatcher, NovelLibraryService, type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
 
 
-import { StickyNoteRepository } from "./repository";
-import { renderStickyNoteCardItem } from "./views/card-item";
-import type { StickyNoteCard, StickyNoteViewOptions } from "./views/types";
-import { areStringArraysEqual, clamp, normalizePosition, normalizePositiveSize } from "../../utils";
+import {StickyNoteRepository} from "./repository";
+import {renderStickyNoteCardItem} from "./views/card-item";
+import type {StickyNoteCard, StickyNoteViewOptions} from "./views/types";
+import {areStringArraysEqual, clamp, normalizePosition, normalizePositiveSize} from "../../utils";
 import {
 	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
 	STICKY_NOTE_FLOAT_DEFAULT_WIDTH,
@@ -572,15 +572,12 @@ function resolveStickyRootPaths(
 	settings: PluginContext["settings"],
 	novelLibraryService: NovelLibraryService,
 ): string[] {
-	const roots = settings.novelLibraries
-		.map((libraryPath) =>
-			novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-				NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-			),
-		)
-		.map((path) => novelLibraryService.normalizeVaultPath(path))
-		.filter((path) => path.length > 0);
-	return Array.from(new Set(roots));
+	const stickyNoteCustomDir = settings.stickyNoteCustomDir;
+	if (!stickyNoteCustomDir) {
+		return [];
+	}
+	const normalizedPath = novelLibraryService.normalizeVaultPath(stickyNoteCustomDir);
+	return normalizedPath ? [normalizedPath] : [];
 }
 
 function resolveScopedStickyRootPaths(
@@ -589,23 +586,8 @@ function resolveScopedStickyRootPaths(
 	preferredFilePath?: string | null,
 ): string[] {
 	const allRoots = resolveStickyRootPaths(settings, novelLibraryService);
-	if (allRoots.length === 0) {
-		return allRoots;
-	}
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const referencePath = typeof preferredFilePath === "string" ? preferredFilePath : "";
-	if (!referencePath) {
-		return [];
-	}
-	const matchedLibraryRoot = novelLibraryService.resolveContainingLibraryRoot(referencePath, normalizedLibraryRoots);
-	if (!matchedLibraryRoot) {
-		return [];
-	}
-	const stickyRootPath = novelLibraryService.resolveNovelLibrarySubdirPath(matchedLibraryRoot,
-		NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-	);
-	const normalizedStickyRootPath = novelLibraryService.normalizeVaultPath(stickyRootPath);
-	return normalizedStickyRootPath ? [normalizedStickyRootPath] : allRoots;
+	// 直接返回所有便签根路径，因为现在只有一个目录
+	return allRoots;
 }
 
 function resolveFloatingBounds(): FloatingBounds {

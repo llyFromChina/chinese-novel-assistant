@@ -1,4 +1,4 @@
-import { App, type FuzzyMatch, FuzzySuggestModal, Notice, TFile } from "obsidian";
+import {App, type FuzzyMatch, FuzzySuggestModal, Notice, TFile} from "obsidian";
 
 const IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif", "heic", "heif", "tiff"]);
 

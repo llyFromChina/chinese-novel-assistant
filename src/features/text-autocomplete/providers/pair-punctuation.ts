@@ -1,6 +1,6 @@
-import { EditorSelection, Prec, type Extension } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
-import { type SettingDatas } from "../../../core";
+import {EditorSelection, type Extension, Prec} from "@codemirror/state";
+import {EditorView, keymap} from "@codemirror/view";
+import {type SettingDatas} from "../../../core";
 
 interface PairToken {
 	open: string;

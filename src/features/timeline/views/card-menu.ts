@@ -1,9 +1,9 @@
-import { setIcon } from "obsidian";
-import { UI } from "../../../core";
+import {setIcon} from "obsidian";
+import {UI} from "../../../core";
 
-import type { TimelineCardMenuCommand } from "../menu-actions";
-import { toRgba } from "../../../utils";
-import { TIMELINE_COLOR_TYPES } from "../color-types";
+import type {TimelineCardMenuCommand} from "../menu-actions";
+import {toRgba} from "../../../utils";
+import {TIMELINE_COLOR_TYPES} from "../color-types";
 
 interface ShowTimelineCardMenuArgs {
 	anchorEl: HTMLElement;

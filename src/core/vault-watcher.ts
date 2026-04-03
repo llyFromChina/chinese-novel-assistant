@@ -1,4 +1,4 @@
-import type { App, TAbstractFile, Plugin } from "obsidian";
+import type {App, Plugin, TAbstractFile} from "obsidian";
 
 export type VaultChangeType = "create" | "modify" | "delete" | "rename";
 

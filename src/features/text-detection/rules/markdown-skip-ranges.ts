@@ -1,4 +1,4 @@
-import type { TextDetectionRange } from "../engine";
+import type {TextDetectionRange} from "../engine";
 
 const FRONTMATTER_BLOCK_REGEX = /^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/;
 const CODE_FENCE_MARKER_REGEX = /^\s*(`{3,}|~{3,})/;

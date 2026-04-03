@@ -1,10 +1,10 @@
-import { Notice, type App } from "obsidian";
+import {type App, Notice} from "obsidian";
 
-import { renderStickyNoteCardItem } from "./card-item";
-import type { StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions } from "./types";
-import { closeStickyNoteCardMenu } from "./card-menu";
-import { type SettingDatas } from "../../../core";
-import { StickyNoteRepository } from "../repository";
+import {renderStickyNoteCardItem} from "./card-item";
+import type {StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions} from "./types";
+import {closeStickyNoteCardMenu} from "./card-menu";
+import {type SettingDatas} from "../../../core";
+import {StickyNoteRepository} from "../repository";
 
 export interface StickyNoteCardListController {
 	setSortMode(sortMode: StickyNoteSortMode): void;

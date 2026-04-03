@@ -1,7 +1,7 @@
-import { Component, MarkdownRenderer, Notice, setIcon, TextAreaComponent, type App, type TFile } from "obsidian";
-import { UI } from "../../../core";
+import {type App, Component, MarkdownRenderer, Notice, setIcon, TextAreaComponent, type TFile} from "obsidian";
+import {UI} from "../../../core";
 
-import type { StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions } from "./types";
+import type {StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions} from "./types";
 import {
 	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
 	STICKY_NOTE_FLOAT_DEFAULT_WIDTH,
@@ -9,11 +9,11 @@ import {
 	STICKY_NOTE_FLOAT_MIN_HEIGHT,
 	STICKY_NOTE_FLOAT_MIN_WIDTH,
 } from "..";
-import { showStickyNoteContentMenu } from "./content-menu";
-import { applyStickyNoteCardMenuCommand, applyStickyNoteRichTextCommand } from "../menu-actions";
-import { openImagePreview, promptVaultImageFile } from "../../../ui";
-import { showStickyNoteCardMenu } from "./card-menu";
-import { extractPlainTextFromMarkdown } from "../../../utils";
+import {showStickyNoteContentMenu} from "./content-menu";
+import {applyStickyNoteCardMenuCommand, applyStickyNoteRichTextCommand} from "../menu-actions";
+import {openImagePreview, promptVaultImageFile} from "../../../ui";
+import {showStickyNoteCardMenu} from "./card-menu";
+import {extractPlainTextFromMarkdown} from "../../../utils";
 
 interface StickyNoteCardItemDeps {
 	app: App;

@@ -1,11 +1,11 @@
-import type { Extension } from "@codemirror/state";
-import { type Plugin } from "obsidian";
+import type {Extension} from "@codemirror/state";
+import {type Plugin} from "obsidian";
 
-import { type SettingDatas, NovelLibraryService } from "../../../core";
-import { createSharedAutocompleteExt, resolveLineSuffixTriggerMatch } from "./shared-autocomplete";
-import { SnippetFragmentService, type SnippetFragment } from "../text-fragment-parser";
+import {NovelLibraryService, type SettingDatas} from "../../../core";
+import {createSharedAutocompleteExt, resolveLineSuffixTriggerMatch} from "./shared-autocomplete";
+import {type SnippetFragment, SnippetFragmentService} from "../text-fragment-parser";
 
-import { resolveFilePathByEditorView } from "../../../utils";
+import {resolveFilePathByEditorView} from "../../../utils";
 
 const CURSOR_PLACEHOLDER = "{$cursor}";
 
@@ -45,13 +45,17 @@ export function createTextFragmentAutocompleteExt(
 
 function resolveLibraryContext(
 	filePath: string,
-	settings: Pick<SettingDatas, "novelLibraries">,
+	settings: SettingDatas,
 	novelLibraryService: NovelLibraryService,
 ): { libraryPath: string } | null {
-	// 根据文件路径定位其所属小说库。
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const libraryPath = novelLibraryService.resolveContainingLibraryRoot(filePath, normalizedLibraryRoots);
-	if (!libraryPath) {
+	// 根据文件路径定位其所属自定义目录。
+	const snippetCustomDir = settings.snippetCustomDir;
+	if (!snippetCustomDir) {
+		return null;
+	}
+
+	const normalizedSnippetDir = novelLibraryService.normalizeVaultPath(snippetCustomDir);
+	if (!normalizedSnippetDir) {
 		return null;
 	}
 
@@ -60,9 +64,7 @@ function resolveLibraryContext(
 		return null;
 	}
 
-	return {
-		libraryPath,
-	};
+	return { libraryPath: normalizedSnippetDir };
 }
 
 function resolveInsertion(content: string): { insertText: string; cursorOffset: number } {

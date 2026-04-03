@@ -1,7 +1,7 @@
-import { type App, type PluginSettingTab } from "obsidian";
-import { NovelLibraryService } from "./novel-library-service";
-import type { SettingDatas } from "./setting-datas";
-import type { SettingStore, SettingsChangeListener } from "./setting-store";
+import {type App, type PluginSettingTab} from "obsidian";
+import {NovelLibraryService} from "./novel-library-service";
+import type {SettingDatas} from "./setting-datas";
+import type {SettingsChangeListener, SettingStore} from "./setting-store";
 
 export interface ContextHost {
 	app: App;

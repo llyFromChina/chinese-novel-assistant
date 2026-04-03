@@ -1,11 +1,11 @@
-import type { Extension } from "@codemirror/state";
-import type { Plugin } from "obsidian";
+import type {Extension} from "@codemirror/state";
+import type {Plugin} from "obsidian";
 
-import { type SettingDatas, NovelLibraryService } from "../../../core";
-import { createSharedAutocompleteExt, resolveLineSuffixTriggerMatch } from "./shared-autocomplete";
-import { GuidebookQuickInsertService, type GuidebookQuickInsertCandidate } from "../../guidebook";
+import {NovelLibraryService, type SettingDatas} from "../../../core";
+import {createSharedAutocompleteExt, resolveLineSuffixTriggerMatch} from "./shared-autocomplete";
+import {type GuidebookQuickInsertCandidate, GuidebookQuickInsertService} from "../../guidebook";
 
-import { containsCjk, resolveFilePathByEditorView } from "../../../utils";
+import {containsCjk, resolveFilePathByEditorView} from "../../../utils";
 
 export function createGuidebookQuickInsertExt(
 	plugin: Plugin,

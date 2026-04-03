@@ -1,4 +1,4 @@
-import { clamp } from "../../utils";
+import {clamp} from "../../utils";
 
 export interface CandidatePanelRenderContext<TItem> {
 	item: TItem;

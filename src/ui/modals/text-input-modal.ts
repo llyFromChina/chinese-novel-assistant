@@ -1,4 +1,4 @@
-import { App, Modal, Notice } from "obsidian";
+import {App, Modal, Notice} from "obsidian";
 
 export interface TextInputModalOptions {
 	title: string;

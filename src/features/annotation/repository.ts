@@ -1,9 +1,5 @@
-import { MarkdownView, TFile, type App } from "obsidian";
-import {
-	type SettingDatas,
-	NovelLibraryService,
-	NOVEL_LIBRARY_SUBDIR_NAMES,
-} from "../../core";
+import {type App, MarkdownView, TFile} from "obsidian";
+import {NovelLibraryService, type SettingDatas,} from "../../core";
 import {
 	asNumber,
 	buildRandomToken,
@@ -12,8 +8,8 @@ import {
 	parseColorHex,
 	resolveEditorViewFromMarkdownView,
 } from "../../utils";
-import type { AnnotationCard, AnnotationEntry } from "./views/types";
-import { normalizeAnnotationColorHex } from "./color-types";
+import type {AnnotationCard, AnnotationEntry} from "./views/types";
+import {normalizeAnnotationColorHex} from "./color-types";
 
 const ANNO_FILE_SUFFIX = ".anno.md";
 const DEFAULT_ANNOTATION_TITLE = "未命名批注";
@@ -52,38 +48,18 @@ export class AnnotationRepository {
 	}
 
 	resolveAnnotationRootPaths(settings: SettingDatas): string[] {
-		const roots = settings.novelLibraries
-			.map((libraryPath) =>
-				this.novelLibraryService.resolveNovelLibrarySubdirPath(
-					libraryPath,
-					NOVEL_LIBRARY_SUBDIR_NAMES.annotation,
-				),
-			)
-			.map((path) => this.novelLibraryService.normalizeVaultPath(path))
-			.filter((path) => path.length > 0);
-		return Array.from(new Set(roots));
+		const annotationCustomDir = settings.annotationCustomDir;
+		if (!annotationCustomDir) {
+			return [];
+		}
+		const normalizedPath = this.novelLibraryService.normalizeVaultPath(annotationCustomDir);
+		return normalizedPath ? [normalizedPath] : [];
 	}
 
 	resolveScopedAnnotationRootPaths(settings: SettingDatas, preferredFilePath?: string | null): string[] {
 		const allRoots = this.resolveAnnotationRootPaths(settings);
-		if (allRoots.length === 0) {
-			return allRoots;
-		}
-		const referencePath = typeof preferredFilePath === "string" ? preferredFilePath : "";
-		if (!referencePath) {
-			return [];
-		}
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		const matchedLibraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(referencePath, normalizedLibraryRoots);
-		if (!matchedLibraryRoot) {
-			return [];
-		}
-		const annotationRootPath = this.novelLibraryService.resolveNovelLibrarySubdirPath(
-			matchedLibraryRoot,
-			NOVEL_LIBRARY_SUBDIR_NAMES.annotation,
-		);
-		const normalizedAnnotationRootPath = this.novelLibraryService.normalizeVaultPath(annotationRootPath);
-		return normalizedAnnotationRootPath ? [normalizedAnnotationRootPath] : allRoots;
+		// 直接返回所有批注根路径，因为现在只有一个目录
+		return allRoots;
 	}
 
 	isManagedSourceFile(settings: SettingDatas, sourcePath: string): boolean {
@@ -95,17 +71,8 @@ export class AnnotationRepository {
 		if (!lower.endsWith(".md") || lower.endsWith(ANNO_FILE_SUFFIX)) {
 			return false;
 		}
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		if (normalizedLibraryRoots.length === 0) {
-			return false;
-		}
-		const libraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(normalizedSourcePath, normalizedLibraryRoots);
-		if (!libraryRoot) {
-			return false;
-		}
-		return !this.novelLibraryService.isInFeatureRoot(normalizedSourcePath, {
-			novelLibraries: settings.novelLibraries,
-		});
+		// 检查文件是否不在任何自定义目录中
+		return !this.novelLibraryService.isInFeatureRoot(normalizedSourcePath, settings);
 	}
 
 	resolveAnnotationPathBySourcePath(settings: SettingDatas, sourcePath: string): string | null {
@@ -113,28 +80,20 @@ export class AnnotationRepository {
 		if (!this.isManagedSourceFile(settings, normalizedSourcePath)) {
 			return null;
 		}
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		const libraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(normalizedSourcePath, normalizedLibraryRoots);
-		if (!libraryRoot) {
+		const annotationCustomDir = settings.annotationCustomDir;
+		if (!annotationCustomDir) {
 			return null;
 		}
-		const annotationRootPath = this.novelLibraryService.resolveNovelLibrarySubdirPath(
-			libraryRoot,
-			NOVEL_LIBRARY_SUBDIR_NAMES.annotation,
-		);
-		const normalizedAnnotationRootPath = this.novelLibraryService.normalizeVaultPath(annotationRootPath);
+		const normalizedAnnotationRootPath = this.novelLibraryService.normalizeVaultPath(annotationCustomDir);
 		if (!normalizedAnnotationRootPath) {
 			return null;
 		}
-		const relativeSourcePath = normalizedSourcePath.slice(libraryRoot.length).replace(/^\/+/, "");
-		if (!relativeSourcePath) {
-			return null;
-		}
-		const relativeWithoutExtension = relativeSourcePath.replace(/\.md$/i, "");
-		if (!relativeWithoutExtension) {
-			return null;
-		}
-		return this.novelLibraryService.normalizeVaultPath(`${normalizedAnnotationRootPath}/${relativeWithoutExtension}${ANNO_FILE_SUFFIX}`);
+		// 基于源文件路径生成唯一的批注文件名
+		const fileName = normalizedSourcePath
+			.replace(/\//g, "-")
+			.replace(/\.md$/i, "")
+			.replace(/[^a-zA-Z0-9-]/g, "") || "unknown";
+		return this.novelLibraryService.normalizeVaultPath(`${normalizedAnnotationRootPath}/${fileName}${ANNO_FILE_SUFFIX}`);
 	}
 
 	async listCards(settings: SettingDatas, rootPaths?: string[]): Promise<AnnotationCard[]> {

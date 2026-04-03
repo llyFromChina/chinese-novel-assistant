@@ -1,12 +1,13 @@
-import { type PluginContext, UI, type SettingDatas, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../../core";
-import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { getLocalizedString } from "../../../utils/localization-helper";
-import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
-import { createStickyNoteCardList } from "./card-list";
-import type { StickyNoteSortMode, StickyNoteViewOptions } from "./types";
-import { StickyNoteRepository } from "../repository";
-import { areStringArraysEqual } from "../../../utils";
+import {NovelLibraryService, type PluginContext, type SettingDatas, UI} from "../../../core";
+import {type EventRef, MarkdownView, Notice, setIcon, type TAbstractFile, TFile, TFolder} from "obsidian";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {getLocalizedString} from "../../../utils/localization-helper";
+import {ClearableInputComponent, showContextMenuAtMouseEvent} from "../../../ui";
+import {createStickyNoteCardList} from "./card-list";
+import type {StickyNoteSortMode, StickyNoteViewOptions} from "./types";
+import {StickyNoteRepository} from "../repository";
+import {areStringArraysEqual} from "../../../utils";
+
 type StickyNoteSparklesTooltipKey = "feature.sticky_note.action.sparkles.tooltip";
 type StickyNoteSortTooltipKey =
 	| "feature.sticky_note.sort.tooltip.desc"
@@ -102,10 +103,11 @@ export function renderStickyNoteSidebarPanel(containerEl: HTMLElement, ctx: Plug
 		if (!normalizedNextPath || !normalizedPreviousPath || normalizedNextPath === normalizedPreviousPath) {
 			return false;
 		}
-		const libraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
-		if (libraryRoots.length === 0) {
+		const stickyNoteCustomDir = ctx.settings.stickyNoteCustomDir;
+		if (!stickyNoteCustomDir) {
 			return false;
 		}
+		const libraryRoots = [stickyNoteCustomDir];
 		return libraryRoots.some((libraryRoot) =>
 			novelLibraryService.isSameOrChildPath(libraryRoot, normalizedPreviousPath) ||
 			novelLibraryService.isSameOrChildPath(normalizedPreviousPath, libraryRoot) ||
@@ -312,15 +314,12 @@ function resolveStickyNoteRootPaths(
 	settings: SettingDatas,
 	novelLibraryService: NovelLibraryService,
 ): string[] {
-	const roots = settings.novelLibraries
-		.map((libraryPath) =>
-			novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-				NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-			),
-		)
-		.map((path) => novelLibraryService.normalizeVaultPath(path))
-		.filter((path) => path.length > 0);
-	return Array.from(new Set(roots));
+	const stickyNoteCustomDir = settings.stickyNoteCustomDir;
+	if (!stickyNoteCustomDir) {
+		return [];
+	}
+	const normalizedPath = novelLibraryService.normalizeVaultPath(stickyNoteCustomDir);
+	return normalizedPath ? [normalizedPath] : [];
 }
 
 function resolveScopedStickyNoteRootPaths(
@@ -330,27 +329,8 @@ function resolveScopedStickyNoteRootPaths(
 ): string[] {
 	const settings = ctx.settings;
 	const allRoots = resolveStickyNoteRootPaths(settings, novelLibraryService);
-	if (allRoots.length === 0) {
-		return allRoots;
-	}
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const referencePath = typeof preferredFilePath === "string"
-		? preferredFilePath
-		: (ctx.app.workspace.getActiveFile()?.path ?? "");
-	if (!referencePath) {
-		return [];
-	}
-	const matchedLibraryRoot = referencePath
-		? novelLibraryService.resolveContainingLibraryRoot(referencePath, normalizedLibraryRoots)
-		: null;
-	if (!matchedLibraryRoot) {
-		return [];
-	}
-	const stickyRootPath = novelLibraryService.resolveNovelLibrarySubdirPath(matchedLibraryRoot,
-		NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-	);
-	const normalizedStickyRootPath = novelLibraryService.normalizeVaultPath(stickyRootPath);
-	return normalizedStickyRootPath ? [normalizedStickyRootPath] : allRoots;
+	// ÃƒÂ§Ã¢â‚¬ÂºÃ‚Â´ÃƒÂ¦Ã…Â½Ã‚Â¥ÃƒÂ¨Ã‚Â¿Ã¢â‚¬ÂÃƒÂ¥Ã¢â‚¬ÂºÃ…Â¾ÃƒÂ¦Ã¢â‚¬Â°Ã¢â€šÂ¬ÃƒÂ¦Ã…â€œÃ¢â‚¬Â°ÃƒÂ¤Ã‚Â¾Ã‚Â¿ÃƒÂ§Ã‚Â­Ã‚Â¾ÃƒÂ¦Ã‚Â Ã‚Â¹ÃƒÂ¨Ã‚Â·Ã‚Â¯ÃƒÂ¥Ã‚Â¾Ã¢â‚¬Å¾ÃƒÂ¯Ã‚Â¼Ã…â€™ÃƒÂ¥Ã¢â‚¬ÂºÃ‚Â ÃƒÂ¤Ã‚Â¸Ã‚ÂºÃƒÂ§Ã…Â½Ã‚Â°ÃƒÂ¥Ã…â€œÃ‚Â¨ÃƒÂ¥Ã‚ÂÃ‚ÂªÃƒÂ¦Ã…â€œÃ¢â‚¬Â°ÃƒÂ¤Ã‚Â¸Ã¢â€šÂ¬ÃƒÂ¤Ã‚Â¸Ã‚ÂªÃƒÂ§Ã¢â‚¬ÂºÃ‚Â®ÃƒÂ¥Ã‚Â½Ã¢â‚¬Â¢
+	return allRoots;
 }
 
 function resolveTargetStickyNoteRootPath(
@@ -358,23 +338,12 @@ function resolveTargetStickyNoteRootPath(
 	novelLibraryService: NovelLibraryService,
 ): string | null {
 	const settings = ctx.settings;
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	if (normalizedLibraryRoots.length === 0) {
+	const stickyNoteCustomDir = settings.stickyNoteCustomDir;
+	if (!stickyNoteCustomDir) {
 		return null;
 	}
-	const activeFilePath = ctx.app.workspace.getActiveFile()?.path ?? "";
-	const activeLibraryRoot = activeFilePath
-		? novelLibraryService.resolveContainingLibraryRoot(activeFilePath, normalizedLibraryRoots)
-		: null;
-	const targetLibraryRoot = activeLibraryRoot ?? normalizedLibraryRoots[0] ?? "";
-	if (!targetLibraryRoot) {
-		return null;
-	}
-	const stickyRootPath = novelLibraryService.resolveNovelLibrarySubdirPath(targetLibraryRoot,
-		NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-	);
-	const normalizedStickyRootPath = novelLibraryService.normalizeVaultPath(stickyRootPath);
-	return normalizedStickyRootPath.length > 0 ? normalizedStickyRootPath : null;
+	const normalizedPath = novelLibraryService.normalizeVaultPath(stickyNoteCustomDir);
+	return normalizedPath.length > 0 ? normalizedPath : null;
 }
 
 function resolveCurrentNovelLibraryName(
@@ -389,13 +358,12 @@ function resolveCurrentNovelLibraryName(
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
-	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
-	if (!matchedLibraryPath) {
+	const stickyNoteCustomDir = settings.stickyNoteCustomDir;
+	if (!stickyNoteCustomDir) {
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
-	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
-	return segments[segments.length - 1] ?? matchedLibraryPath;
+	const segments = stickyNoteCustomDir.split("/").filter((segment) => segment.length > 0);
+	return segments[segments.length - 1] ?? stickyNoteCustomDir;
 }
 
 function getSparklesTooltipKey(): StickyNoteSparklesTooltipKey {

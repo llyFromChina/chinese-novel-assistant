@@ -1,7 +1,7 @@
-import type { EditorView } from "@codemirror/view";
-import { type SettingDatas } from "../../../core";
-import type { TextDetectionRange, TextDetectionRule } from "../engine";
-import { collectPunctuationIgnoredRanges, isIndexInRanges } from "./markdown-skip-ranges";
+import type {EditorView} from "@codemirror/view";
+import {type SettingDatas} from "../../../core";
+import type {TextDetectionRange, TextDetectionRule} from "../engine";
+import {collectPunctuationIgnoredRanges, isIndexInRanges} from "./markdown-skip-ranges";
 
 interface PairToken {
 	open: string;

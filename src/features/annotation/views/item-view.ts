@@ -1,7 +1,7 @@
-import { ItemView, WorkspaceLeaf } from "obsidian";
-import { UI, type PluginContext } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { renderAnnotationSidebarPanel } from "./sidebar-panel";
+import {ItemView, WorkspaceLeaf} from "obsidian";
+import {type PluginContext, UI} from "../../../core";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {renderAnnotationSidebarPanel} from "./sidebar-panel";
 
 export class AnnotationSidebarView extends ItemView {
 	private activeTabDispose: (() => void) | null = null;

@@ -1,16 +1,16 @@
-import { EditorSelection } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
-import { MarkdownView, Notice, type Plugin, type Editor } from "obsidian";
-import { type PluginContext } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
+import {EditorSelection} from "@codemirror/state";
+import {EditorView} from "@codemirror/view";
+import {type Editor, MarkdownView, Notice, type Plugin} from "obsidian";
+import {type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
 import {
-	ProofreadDictService,
 	collectPunctuationIgnoredRanges,
 	fixEnPunctuationErrors,
 	fixPairPunctuationErrors,
 	fixProofreadDictErrors,
+	ProofreadDictService,
 } from "../text-detection";
-import { clamp, resolveEditorViewFromMarkdownView } from "../../utils";
+import {clamp, resolveEditorViewFromMarkdownView} from "../../utils";
 
 type MaybeEditorView = ReturnType<typeof EditorView.findFromDOM>;
 type ResolvedEditorView = NonNullable<MaybeEditorView>;

@@ -1,14 +1,9 @@
-import { type App, Notice, TFile } from "obsidian";
+import {type App, Notice, TFile} from "obsidian";
 
-import { type SettingDatas } from "../../core";
-import { areStringArraysEqual, clamp, splitLines } from "../../utils";
-import { GuidebookMarkdownParser } from "./markdown-parser";
-import type {
-	GuidebookTreeData,
-	GuidebookTreeFileNode,
-	GuidebookTreeH1Node,
-	GuidebookTreeH2Node,
-} from "./tree-builder";
+import {type SettingDatas} from "../../core";
+import {areStringArraysEqual, clamp, splitLines} from "../../utils";
+import {GuidebookMarkdownParser} from "./markdown-parser";
+import type {GuidebookTreeData, GuidebookTreeFileNode, GuidebookTreeH1Node, GuidebookTreeH2Node,} from "./tree-builder";
 
 type DragDropPosition = "before" | "after" | "inside";
 

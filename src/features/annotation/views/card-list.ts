@@ -1,11 +1,11 @@
-import { Notice, type App } from "obsidian";
+import {type App, Notice} from "obsidian";
 
-import { closeAnnotationCardMenu } from "./card-menu";
-import { renderAnnotationCardItem } from "./card-item";
-import type { AnnotationCard } from "./types";
-import type { SettingDatas } from "../../../core";
-import { normalizeVaultPath } from "../../../core";
-import { AnnotationRepository } from "../repository";
+import {closeAnnotationCardMenu} from "./card-menu";
+import {renderAnnotationCardItem} from "./card-item";
+import type {AnnotationCard} from "./types";
+import type {SettingDatas} from "../../../core";
+import {normalizeVaultPath} from "../../../core";
+import {AnnotationRepository} from "../repository";
 
 export interface AnnotationCardListController {
 	setSearchKeyword(keyword: string): void;

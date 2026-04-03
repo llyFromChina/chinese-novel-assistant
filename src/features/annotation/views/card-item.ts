@@ -1,12 +1,12 @@
-import { Component, MarkdownRenderer, setIcon, TextAreaComponent, type App } from "obsidian";
-import { UI } from "../../../core";
+import {type App, Component, MarkdownRenderer, setIcon, TextAreaComponent} from "obsidian";
+import {UI} from "../../../core";
 
-import { extractPlainTextFromMarkdown, toRgba } from "../../../utils";
-import { applyAnnotationCardMenuCommand } from "../menu-actions";
-import { applyStickyNoteRichTextCommand } from "../../sticky-note/menu-actions";
-import { showAnnotationCardMenu } from "./card-menu";
-import { showStickyNoteContentMenu } from "../../sticky-note/views/content-menu";
-import type { AnnotationCard } from "./types";
+import {extractPlainTextFromMarkdown, toRgba} from "../../../utils";
+import {applyAnnotationCardMenuCommand} from "../menu-actions";
+import {applyStickyNoteRichTextCommand} from "../../sticky-note/menu-actions";
+import {showAnnotationCardMenu} from "./card-menu";
+import {showStickyNoteContentMenu} from "../../sticky-note/views/content-menu";
+import type {AnnotationCard} from "./types";
 
 interface AnnotationCardItemDeps {
 	app: App;

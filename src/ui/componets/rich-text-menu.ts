@@ -1,6 +1,6 @@
-import { UI } from "../../core";
+import {UI} from "../../core";
 
-import { showContextMenuAtMouseEvent } from "./context-menu";
+import {showContextMenuAtMouseEvent} from "./context-menu";
 
 export type RichTextCommand =
 	| "bold"

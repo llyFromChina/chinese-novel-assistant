@@ -1,7 +1,7 @@
-import { TFile, type Plugin } from "obsidian";
-import { DEFAULT_CHAPTER_NAME_FORMAT, type PluginContext } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
-import { openMarkdownFileWithoutDuplicate } from "../../utils";
+import {type Plugin, TFile} from "obsidian";
+import {DEFAULT_CHAPTER_NAME_FORMAT, type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
+import {openMarkdownFileWithoutDuplicate} from "../../utils";
 
 const CHAPTER_NUMBER_PATTERN = /第(\d+)章/g;
 const PADDED_NUM_PLACEHOLDER_PATTERN = /\{num:(\d+)\}/g;

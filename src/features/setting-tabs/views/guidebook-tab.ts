@@ -1,7 +1,7 @@
-import { Setting } from "obsidian";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { createSettingsSectionHeading } from "./heading";
-import type { SettingsTabRenderContext } from "./types";
+import {Setting} from "obsidian";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {createSettingsSectionHeading} from "./heading";
+import type {SettingsTabRenderContext} from "./types";
 
 export function renderGuidebookSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx } = deps;

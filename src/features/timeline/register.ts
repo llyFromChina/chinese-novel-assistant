@@ -1,6 +1,6 @@
-import type { Plugin, WorkspaceLeaf } from "obsidian";
-import { type PluginContext } from "../../core";
-import { TimelineSidebarView } from "./views/item-view";
+import type {Plugin, WorkspaceLeaf} from "obsidian";
+import {type PluginContext} from "../../core";
+import {TimelineSidebarView} from "./views/item-view";
 
 export function registerTimelineSidebarView(plugin: Plugin, ctx: PluginContext): void {
 	plugin.registerView(

@@ -1,8 +1,8 @@
-import { Setting } from "obsidian";
-import { DEFAULT_CHAPTER_NAME_FORMAT } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { createSettingsSectionHeading } from "./heading";
-import type { SettingsTabRenderContext } from "./types";
+import {Setting} from "obsidian";
+import {DEFAULT_CHAPTER_NAME_FORMAT} from "../../../core";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {createSettingsSectionHeading} from "./heading";
+import type {SettingsTabRenderContext} from "./types";
 
 export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx, refresh } = deps;

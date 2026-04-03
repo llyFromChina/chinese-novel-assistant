@@ -1,4 +1,4 @@
-import { App, Modal, Setting } from "obsidian";
+import {App, Modal, Setting} from "obsidian";
 
 export interface ConfirmModalOptions {
 	title: string;

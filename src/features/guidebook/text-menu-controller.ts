@@ -1,10 +1,10 @@
-import type { EditorView } from "@codemirror/view";
-import { Editor, MarkdownFileInfo, MarkdownView, Menu, MenuItem, setIcon, type Plugin } from "obsidian";
-import { UI, type SettingDatas } from "../../core";
+import type {EditorView} from "@codemirror/view";
+import {Editor, MarkdownFileInfo, MarkdownView, Menu, MenuItem, type Plugin, setIcon} from "obsidian";
+import {type SettingDatas, UI} from "../../core";
 
-import { resolveEditorViewFromMarkdownView } from "../../utils";
-import { appendGuidebookSettingToCategoryByPath } from "./menu-actions";
-import { buildGuidebookTreeData, type GuidebookTreeData } from "./tree-builder";
+import {resolveEditorViewFromMarkdownView} from "../../utils";
+import {appendGuidebookSettingToCategoryByPath} from "./menu-actions";
+import {buildGuidebookTreeData, type GuidebookTreeData} from "./tree-builder";
 
 interface TextMenuControllerOptions {
 	getSettings: () => SettingDatas;

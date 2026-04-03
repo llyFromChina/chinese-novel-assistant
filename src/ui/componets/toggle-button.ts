@@ -1,4 +1,4 @@
-import { setIcon } from "obsidian";
+import {setIcon} from "obsidian";
 
 export interface ToggleButtonOptions {
 	containerEl: HTMLElement;

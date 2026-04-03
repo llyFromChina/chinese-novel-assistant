@@ -1,13 +1,18 @@
-import { TFile, type App } from "obsidian";
-import { type SettingDatas, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, STICKY_NOTE_COLORS } from "../../core";
+import {type App, TFile} from "obsidian";
+import {NovelLibraryService, type SettingDatas, STICKY_NOTE_COLORS} from "../../core";
 
-import type { StickyNoteCard, StickyNoteImage } from "./views/types";
-import { asBoolean, asNumber, buildRandomToken, extractPlainTextFromMarkdown, isRecord, pad2, parseColorHex } from "../../utils";
-
+import type {StickyNoteCard, StickyNoteImage} from "./views/types";
 import {
-	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
-	STICKY_NOTE_FLOAT_DEFAULT_WIDTH,
-} from "./index";
+	asBoolean,
+	asNumber,
+	buildRandomToken,
+	extractPlainTextFromMarkdown,
+	isRecord,
+	pad2,
+	parseColorHex
+} from "../../utils";
+
+import {STICKY_NOTE_FLOAT_DEFAULT_HEIGHT, STICKY_NOTE_FLOAT_DEFAULT_WIDTH,} from "./index";
 
 const STICKY_NOTE_WARNING_TEXT = "数据由灵感便签管理，请勿删除或手动修改";
 const STICKY_NOTE_DEFAULT_COLOR = "#9CA3AF";
@@ -114,15 +119,12 @@ export class StickyNoteRepository {
 				),
 			);
 		}
-		const roots = settings.novelLibraries
-			.map((libraryPath) =>
-				this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-					NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-				),
-			)
-			.map((path) => this.novelLibraryService.normalizeVaultPath(path))
-			.filter((path) => path.length > 0);
-		return Array.from(new Set(roots));
+		const stickyNoteCustomDir = settings.stickyNoteCustomDir;
+		if (!stickyNoteCustomDir) {
+			return [];
+		}
+		const normalizedPath = this.novelLibraryService.normalizeVaultPath(stickyNoteCustomDir);
+		return normalizedPath ? [normalizedPath] : [];
 	}
 
 	// 便签md数据解析
@@ -306,8 +308,3 @@ function parseCsvPaths(value: unknown, normalizeItem: (value: string) => string)
 		.filter((item) => item.length > 0);
 	return Array.from(new Set(parts));
 }
-
-
-
-
-

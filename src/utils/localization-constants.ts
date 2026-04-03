@@ -29,20 +29,32 @@ export const LocalizationConstants = {
     },
     global: {
       section: {
-        novel_library: "小说库"
+        custom_dirs: "自定义目录"
       },
-      novel_library: {
-        add: {
-          name: "添加新小说库",
-          desc: "添加时，会自动创建设定库、便签库、片段库和纠错词库",
-          placeholder: "输入小说库路径"
+      custom_dirs: {
+        guidebook: {
+          name: "设定库目录",
+          desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录"
         },
-        exists: "该小说库已存在",
-        missing: "（已丢失）",
-        create_subdirs_failed: "创建小说库目录失败，请检查路径是否有效",
-        delete_confirm: {
-          title: "确认删除小说库",
-          message: "确定删除这个小说库配置吗？仅移除配置，不会删除实际文件夹。"
+        sticky_note: {
+          name: "便签库目录",
+          desc: "便签库的自定义目录路径，相对于 Obsidian 根仓库目录"
+        },
+        annotation: {
+          name: "批注库目录",
+          desc: "批注库的自定义目录路径，相对于 Obsidian 根仓库目录"
+        },
+        timeline: {
+          name: "时间轴库目录",
+          desc: "时间轴库的自定义目录路径，相对于 Obsidian 根仓库目录"
+        },
+        snippet: {
+          name: "片段库目录",
+          desc: "片段库的自定义目录路径，相对于 Obsidian 根仓库目录"
+        },
+        proofread_dictionary: {
+          name: "纠错词库目录",
+          desc: "纠错词库的自定义目录路径，相对于 Obsidian 根仓库目录"
         }
       }
     },

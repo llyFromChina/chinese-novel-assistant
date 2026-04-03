@@ -1,12 +1,12 @@
-import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
-import { UI, type PluginContext, type NovelLibraryService } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { getLocalizedString } from "../../../utils/localization-helper";
-import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
-import { areStringArraysEqual } from "../../../utils";
-import { TIMELINE_COLOR_TYPES } from "../color-types";
-import { TimelineRepository } from "../repository";
-import { createTimelineCardList } from "./card-list";
+import {type EventRef, MarkdownView, Notice, setIcon, type TAbstractFile, TFile, TFolder} from "obsidian";
+import {type NovelLibraryService, type PluginContext, UI} from "../../../core";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {getLocalizedString} from "../../../utils/localization-helper";
+import {ClearableInputComponent, showContextMenuAtMouseEvent} from "../../../ui";
+import {areStringArraysEqual} from "../../../utils";
+import {TIMELINE_COLOR_TYPES} from "../color-types";
+import {TimelineRepository} from "../repository";
+import {createTimelineCardList} from "./card-list";
 
 const TIMELINE_FILTER_MENU_SECTION = "cna-timeline-filter-color";
 
@@ -120,10 +120,11 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 		if (!normalizedNextPath || !normalizedPreviousPath || normalizedNextPath === normalizedPreviousPath) {
 			return false;
 		}
-		const libraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
-		if (libraryRoots.length === 0) {
+		const timelineCustomDir = ctx.settings.timelineCustomDir;
+		if (!timelineCustomDir) {
 			return false;
 		}
+		const libraryRoots = [timelineCustomDir];
 		return libraryRoots.some((libraryRoot) =>
 			novelLibraryService.isSameOrChildPath(libraryRoot, normalizedPreviousPath) ||
 			novelLibraryService.isSameOrChildPath(normalizedPreviousPath, libraryRoot) ||
@@ -223,7 +224,7 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 	filterButtonEl.addEventListener("click", openFilterMenu);
 
 	const onCreateClick = (): void => {
-		if (ctx.settings.novelLibraries.length === 0) {
+		if (!ctx.settings.timelineCustomDir) {
 		new Notice(LocalizationConstants.feature.timeline.notice.no_library);
 		return;
 	}
@@ -285,11 +286,10 @@ function resolveCurrentNovelLibraryName(
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
-	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
-	if (!matchedLibraryPath) {
+	const timelineCustomDir = settings.timelineCustomDir;
+	if (!timelineCustomDir) {
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
-	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
-	return segments[segments.length - 1] ?? matchedLibraryPath;
+	const segments = timelineCustomDir.split("/").filter((segment) => segment.length > 0);
+	return segments[segments.length - 1] ?? timelineCustomDir;
 }

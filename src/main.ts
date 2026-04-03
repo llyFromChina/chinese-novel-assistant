@@ -1,22 +1,29 @@
-import { Plugin } from "obsidian";
-import { createPluginContext, type ContextHost, type PluginContext, createDefaultSettings, type SettingDatas, SettingStore } from "./core";
+import {Plugin} from "obsidian";
+import {
+	type ContextHost,
+	createDefaultSettings,
+	createPluginContext,
+	type PluginContext,
+	type SettingDatas,
+	SettingStore
+} from "./core";
 
 // 界面相关
-import { CNASettingTab } from "./features/setting-tabs/views/settings-tab";
-import { registerSidebarFeature } from "./features/sidebar";
-import { registerRibbonFeature } from "./features/ribbon";
+import {CNASettingTab} from "./features/setting-tabs/views/settings-tab";
+import {registerSidebarFeature} from "./features/sidebar";
+import {registerRibbonFeature} from "./features/ribbon";
 // 功能相关
-import { registerGuidebookSidebarView } from "./features/guidebook";
-import { registerStickyNoteSidebarView } from "./features/sticky-note";
-import { registerStickyNoteFloatingFeature } from "./features/sticky-note/floating-manager";
-import { registerCharacterCountFeature } from "./features/character-count";
-import { registerCommandsFeature } from "./features/commands";
-import { registerTextDetectionFeature } from "./features/text-detection";
-import { registerTextAutocompleteFeature } from "./features/text-autocomplete";
-import { registerTypesetFeature } from "./features/typeset";
-import { registerNovelLibraryFeature } from "./features/novel-library";
-import { registerAnnotationFeature, registerAnnotationSidebarView } from "./features/annotation";
-import { registerTimelineSidebarView } from "./features/timeline";
+import {registerGuidebookSidebarView} from "./features/guidebook";
+import {registerStickyNoteSidebarView} from "./features/sticky-note";
+import {registerStickyNoteFloatingFeature} from "./features/sticky-note/floating-manager";
+import {registerCharacterCountFeature} from "./features/character-count";
+import {registerCommandsFeature} from "./features/commands";
+import {registerTextDetectionFeature} from "./features/text-detection";
+import {registerTextAutocompleteFeature} from "./features/text-autocomplete";
+import {registerTypesetFeature} from "./features/typeset";
+
+import {registerAnnotationFeature, registerAnnotationSidebarView} from "./features/annotation";
+import {registerTimelineSidebarView} from "./features/timeline";
 
 export default class CNAPlugin extends Plugin {
 	private settingStore = new SettingStore(this);
@@ -38,7 +45,7 @@ export default class CNAPlugin extends Plugin {
 		registerSidebarFeature(this, this.ctx);
 
 		// 注册功能
-		registerNovelLibraryFeature(this, this.ctx);
+
 		registerCommandsFeature(this, this.ctx);
 		registerAnnotationFeature(this, this.ctx);
 		registerCharacterCountFeature(this, this.ctx);

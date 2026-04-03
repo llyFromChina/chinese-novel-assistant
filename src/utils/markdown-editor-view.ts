@@ -1,5 +1,5 @@
-import { EditorView } from "@codemirror/view";
-import { type App, MarkdownView, type WorkspaceLeaf } from "obsidian";
+import {EditorView} from "@codemirror/view";
+import {type App, MarkdownView, type WorkspaceLeaf} from "obsidian";
 
 type MaybeEditorView = ReturnType<typeof EditorView.findFromDOM>;
 type ResolvedEditorView = NonNullable<MaybeEditorView>;

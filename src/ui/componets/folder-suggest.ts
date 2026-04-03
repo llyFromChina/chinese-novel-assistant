@@ -1,5 +1,5 @@
-import { type AbstractInputSuggest, type App, TFolder } from "obsidian";
-import { attachInputSuggest } from "./input-suggest";
+import {type AbstractInputSuggest, type App, TFolder} from "obsidian";
+import {attachInputSuggest} from "./input-suggest";
 
 export interface FolderSuggestOptions {
 	shouldIncludeFolderPath?: (path: string) => boolean;

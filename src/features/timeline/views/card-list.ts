@@ -1,10 +1,10 @@
-import { Notice, type App } from "obsidian";
+import {type App, Notice} from "obsidian";
 
-import { closeTimelineCardMenu } from "./card-menu";
-import { renderTimelineCardItem } from "./card-item";
-import type { TimelineCard } from "./types";
-import type { SettingDatas, NovelLibraryService } from "../../../core";
-import { TimelineRepository } from "../repository";
+import {closeTimelineCardMenu} from "./card-menu";
+import {renderTimelineCardItem} from "./card-item";
+import type {TimelineCard} from "./types";
+import type {NovelLibraryService, SettingDatas} from "../../../core";
+import {TimelineRepository} from "../repository";
 
 export interface TimelineCardListController {
 	setSearchKeyword(keyword: string): void;

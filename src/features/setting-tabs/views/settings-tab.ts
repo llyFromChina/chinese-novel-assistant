@@ -1,17 +1,17 @@
-import { App, Plugin, PluginSettingTab } from "obsidian";
-import { type PluginContext } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { ClearableInputComponent, TabsComponent, type TabDefinition } from "../../../ui";
+import {App, Plugin, PluginSettingTab} from "obsidian";
+import {type PluginContext} from "../../../core";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {ClearableInputComponent, type TabDefinition, TabsComponent} from "../../../ui";
 import {
-	type SettingsTabRenderContext,
+	renderAnnotationSettings,
 	renderGlobalSettings,
 	renderGuidebookSettings,
-	renderAnnotationSettings,
-	renderStickyNoteSettings,
 	renderOtherSettings,
 	renderProofreadSettings,
 	renderSnippetSettings,
+	renderStickyNoteSettings,
 	renderTypesetSettings,
+	type SettingsTabRenderContext,
 } from "./index";
 
 const SETTINGS_SEARCH_HIDDEN_CLASS = "cna-settings-search-hidden";

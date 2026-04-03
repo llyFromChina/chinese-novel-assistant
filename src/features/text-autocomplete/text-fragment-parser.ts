@@ -1,5 +1,5 @@
-import { type App, type Plugin } from "obsidian";
-import { type SettingDatas, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, bindVaultChangeWatcher } from "../../core";
+import {type App, type Plugin} from "obsidian";
+import {bindVaultChangeWatcher, NovelLibraryService, type SettingDatas} from "../../core";
 
 export interface SnippetFragment {
 	keyword: string;
@@ -11,7 +11,7 @@ interface SnippetLibrarySnapshot {
 }
 
 interface QuerySnippetFragmentsOptions {
-	settings: Pick<SettingDatas, "novelLibraries">;
+	settings: Pick<SettingDatas, "snippetCustomDir">;
 	libraryPath: string;
 	query: string;
 }
@@ -83,7 +83,7 @@ export class SnippetFragmentService {
 	}
 
 	private async ensureLibrarySnapshot(
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "snippetCustomDir">,
 		libraryPath: string,
 	): Promise<SnippetLibrarySnapshot> {
 		const normalizedLibraryPath = this.novelLibraryService.normalizeVaultPath(libraryPath);
@@ -103,12 +103,10 @@ export class SnippetFragmentService {
 	}
 
 	private async buildLibrarySnapshot(
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "snippetCustomDir">,
 		libraryPath: string,
 	): Promise<SnippetLibrarySnapshot> {
-		const snippetRoot = this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-			NOVEL_LIBRARY_SUBDIR_NAMES.snippet,
-		);
+		const snippetRoot = settings.snippetCustomDir;
 		if (!snippetRoot) {
 			return this.createEmptySnapshot();
 		}
@@ -117,7 +115,7 @@ export class SnippetFragmentService {
 		const markdownFiles = this.app.vault.getMarkdownFiles();
 		for (const file of markdownFiles) {
 			const normalizedPath = this.novelLibraryService.normalizeVaultPath(file.path);
-			if (!this.isSameOrChildPath(normalizedPath, snippetRoot)) {
+			if (!this.novelLibraryService.isSameOrChildPath(normalizedPath, snippetRoot)) {
 				continue;
 			}
 
@@ -193,38 +191,28 @@ export class SnippetFragmentService {
 
 	private isSnippetMarkdownPath(
 		path: string,
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "snippetCustomDir">,
 	): boolean {
 		const normalizedPath = this.novelLibraryService.normalizeVaultPath(path);
 		if (!normalizedPath || !normalizedPath.toLowerCase().endsWith(".md")) {
 			return false;
 		}
 
-		const snippetRoots = this.resolveSnippetRoots(settings);
-		return snippetRoots.some((root) => this.isSameOrChildPath(normalizedPath, root));
+		const snippetRoot = settings.snippetCustomDir;
+		if (!snippetRoot) {
+			return false;
+		}
+
+		return this.novelLibraryService.isSameOrChildPath(normalizedPath, snippetRoot);
 	}
 
-	private resolveSnippetRoots(
-		settings: Pick<SettingDatas, "novelLibraries">,
-	): string[] {
-		const roots: string[] = [];
-		for (const libraryPath of settings.novelLibraries) {
-			const snippetRoot = this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-				NOVEL_LIBRARY_SUBDIR_NAMES.snippet,
-			);
-			if (!snippetRoot) {
-				continue;
-			}
-			roots.push(snippetRoot);
-		}
-		return Array.from(new Set(roots));
-	}
+
 
 	private createCacheKey(
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "snippetCustomDir">,
 		normalizedLibraryPath: string,
 	): string {
-		const normalizedSnippetDirName = this.novelLibraryService.normalizeVaultPath(NOVEL_LIBRARY_SUBDIR_NAMES.snippet);
+		const normalizedSnippetDirName = this.novelLibraryService.normalizeVaultPath(settings.snippetCustomDir);
 		return `${normalizedLibraryPath}::${normalizedSnippetDirName}`;
 	}
 
@@ -248,7 +236,5 @@ export class SnippetFragmentService {
 		return left.localeCompare(right);
 	}
 
-	private isSameOrChildPath(path: string, root: string): boolean {
-		return path === root || path.startsWith(`${root}/`);
-	}
+
 }

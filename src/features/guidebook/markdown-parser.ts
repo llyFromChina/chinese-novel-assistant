@@ -1,4 +1,4 @@
-import { splitLines } from "../../utils";
+import {splitLines} from "../../utils";
 
 export interface GuidebookMarkdownTreeH2Node {
 	title: string;

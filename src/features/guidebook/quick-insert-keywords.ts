@@ -1,7 +1,7 @@
-import { type App, type Plugin } from "obsidian";
-import { buildGuidebookTreeData } from "./tree-builder";
-import { collectGuidebookAliases } from "./alias-utils";
-import { type SettingDatas, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, bindVaultChangeWatcher } from "../../core";
+import {type App, type Plugin} from "obsidian";
+import {buildGuidebookTreeData} from "./tree-builder";
+import {collectGuidebookAliases} from "./alias-utils";
+import {bindVaultChangeWatcher, NovelLibraryService, type SettingDatas} from "../../core";
 
 export interface GuidebookQuickInsertCandidate {
 	keyword: string;
@@ -15,7 +15,7 @@ interface GuidebookQuickInsertSnapshot {
 interface QueryGuidebookQuickInsertOptions {
 	settings: Pick<
 		SettingDatas,
-		"novelLibraries" | "guidebookCollectionOrders" | "guidebookWesternNameAutoAliasEnabled"
+		"guidebookCustomDir" | "guidebookCollectionOrders" | "guidebookWesternNameAutoAliasEnabled"
 	>;
 	filePath: string;
 	query: string;
@@ -54,10 +54,10 @@ export class GuidebookQuickInsertService {
 		const onChangedPath = (path: string, oldPath?: string): void => {
 			const settings = getSettings();
 			const affectedLibraryRoots = new Set<string>();
-			this.tryCollectGuidebookLibraryRoot(path, settings, affectedLibraryRoots);
-			this.tryCollectGuidebookLibraryRoot(oldPath ?? "", settings, affectedLibraryRoots);
+			this.tryCollectGuidebookLibraryRoot(path, { guidebookCustomDir: settings.guidebookCustomDir }, affectedLibraryRoots);
+			this.tryCollectGuidebookLibraryRoot(oldPath ?? "", { guidebookCustomDir: settings.guidebookCustomDir }, affectedLibraryRoots);
 			for (const libraryRoot of affectedLibraryRoots) {
-				this.invalidateByLibraryRoot(settings, libraryRoot);
+				this.invalidateByLibraryRoot({ guidebookCustomDir: settings.guidebookCustomDir }, libraryRoot);
 			}
 		};
 
@@ -82,12 +82,12 @@ export class GuidebookQuickInsertService {
 			return [];
 		}
 
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(options.settings.novelLibraries);
-		const libraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(options.filePath, normalizedLibraryRoots);
-		if (!libraryRoot) {
+		const guidebookCustomDir = options.settings.guidebookCustomDir;
+		if (!guidebookCustomDir) {
 			return [];
 		}
 
+		const libraryRoot = guidebookCustomDir;
 		const snapshot = await this.ensureSnapshot(options.settings, options.filePath, libraryRoot);
 		return snapshot.candidates
 			.filter((candidate) => candidate.keywordLower.includes(normalizedQuery))
@@ -166,7 +166,7 @@ export class GuidebookQuickInsertService {
 
 	private tryCollectGuidebookLibraryRoot(
 		path: string,
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "guidebookCustomDir">,
 		target: Set<string>,
 	): void {
 		const normalizedPath = this.novelLibraryService.normalizeVaultPath(path);
@@ -174,25 +174,22 @@ export class GuidebookQuickInsertService {
 			return;
 		}
 
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		const libraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(normalizedPath, normalizedLibraryRoots);
-		if (!libraryRoot) {
+		const guidebookCustomDir = settings.guidebookCustomDir;
+		if (!guidebookCustomDir) {
 			return;
 		}
 
-		const guidebookRoot = this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryRoot,
-			NOVEL_LIBRARY_SUBDIR_NAMES.guidebook,
-		);
+		const guidebookRoot = this.novelLibraryService.normalizeVaultPath(guidebookCustomDir);
 		if (!guidebookRoot) {
 			return;
 		}
 		if (this.novelLibraryService.isSameOrChildPath(normalizedPath, guidebookRoot)) {
-			target.add(libraryRoot);
+			target.add(guidebookRoot);
 		}
 	}
 
 	private invalidateByLibraryRoot(
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "guidebookCustomDir">,
 		libraryRoot: string,
 	): void {
 		const key = this.createCacheKey(settings, libraryRoot);
@@ -201,11 +198,10 @@ export class GuidebookQuickInsertService {
 	}
 
 	private createCacheKey(
-		settings: Pick<SettingDatas, "novelLibraries">,
+		settings: Pick<SettingDatas, "guidebookCustomDir">,
 		normalizedLibraryPath: string,
 	): string {
-		const normalizedGuidebookDirName = this.novelLibraryService.normalizeVaultPath(NOVEL_LIBRARY_SUBDIR_NAMES.guidebook);
-		return `${normalizedLibraryPath}::${normalizedGuidebookDirName}`;
+		return normalizedLibraryPath;
 	}
 
 	private compareByQuery(left: GuidebookQuickInsertCandidate, right: GuidebookQuickInsertCandidate, query: string): number {

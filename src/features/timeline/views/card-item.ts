@@ -1,11 +1,11 @@
-import { Component, MarkdownRenderer, setIcon, TextAreaComponent, type App } from "obsidian";
-import { UI } from "../../../core";
+import {type App, Component, MarkdownRenderer, setIcon, TextAreaComponent} from "obsidian";
+import {UI} from "../../../core";
 
-import { applyRichTextCommand, showRichTextContentMenu } from "../../../ui";
-import { extractPlainTextFromMarkdown, toRgba } from "../../../utils";
-import { applyTimelineCardMenuCommand } from "../menu-actions";
-import { showTimelineCardMenu } from "./card-menu";
-import type { TimelineCard } from "./types";
+import {applyRichTextCommand, showRichTextContentMenu} from "../../../ui";
+import {extractPlainTextFromMarkdown, toRgba} from "../../../utils";
+import {applyTimelineCardMenuCommand} from "../menu-actions";
+import {showTimelineCardMenu} from "./card-menu";
+import type {TimelineCard} from "./types";
 
 interface TimelineCardItemDeps {
 	app: App;

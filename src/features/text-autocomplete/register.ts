@@ -1,10 +1,10 @@
-import { Plugin } from "obsidian";
-import { type PluginContext } from "../../core";
-import { createPairPunctuationAutocompleteExtension } from "./providers/pair-punctuation";
-import { createTextFragmentAutocompleteExt } from "./providers/text-fragment";
-import { createGuidebookQuickInsertExt } from "./providers/guidebook-quick-insert";
-import { SnippetFragmentService } from "./text-fragment-parser";
-import { GuidebookQuickInsertService } from "../guidebook";
+import {Plugin} from "obsidian";
+import {type PluginContext} from "../../core";
+import {createPairPunctuationAutocompleteExtension} from "./providers/pair-punctuation";
+import {createTextFragmentAutocompleteExt} from "./providers/text-fragment";
+import {createGuidebookQuickInsertExt} from "./providers/guidebook-quick-insert";
+import {SnippetFragmentService} from "./text-fragment-parser";
+import {GuidebookQuickInsertService} from "../guidebook";
 
 export function registerTextAutocompleteFeature(plugin: Plugin, ctx: PluginContext): void {
 	const feature = new TextAutocompleteFeature(plugin, ctx);

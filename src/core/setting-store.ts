@@ -1,5 +1,5 @@
-import { Plugin } from "obsidian";
-import { createDefaultSettings, SettingDatas } from "./setting-datas";
+import {Plugin} from "obsidian";
+import {createDefaultSettings, SettingDatas} from "./setting-datas";
 
 export type SettingsChangeListener = (
 	next: Readonly<SettingDatas>,

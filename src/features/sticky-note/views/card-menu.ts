@@ -1,8 +1,8 @@
-import { setIcon } from "obsidian";
-import { STICKY_NOTE_COLORS, UI } from "../../../core";
-import { toRgba } from "../../../utils";
+import {setIcon} from "obsidian";
+import {STICKY_NOTE_COLORS, UI} from "../../../core";
+import {toRgba} from "../../../utils";
 
-import type { StickyNoteCardMenuCommand } from "../menu-actions";
+import type {StickyNoteCardMenuCommand} from "../menu-actions";
 
 interface ShowStickyNoteCardMenuArgs {
 	anchorEl: HTMLElement;

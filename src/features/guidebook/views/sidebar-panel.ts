@@ -1,18 +1,18 @@
-import { type PluginContext, UI, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, type VaultChangeEvent, watchVaultChanges } from "../../../core";
-import { MarkdownView, setIcon, TFile, TFolder } from "obsidian";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { getLocalizedString } from "../../../utils/localization-helper";
-import { ClearableInputComponent, ToggleButtonComponent } from "../../../ui";
-import { createGuidebookTreeViewComponent, type GuidebookTreeExpandedStateSnapshot } from "./outline-tree";
-import { buildGuidebookTreeData, type GuidebookTreeData } from "../tree-builder";
-import { filterGuidebookTreeByKeyword } from "./search-box";
+import {NovelLibraryService, type PluginContext, UI, type VaultChangeEvent, watchVaultChanges} from "../../../core";
+import {MarkdownView, setIcon, TFile, TFolder} from "obsidian";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {getLocalizedString} from "../../../utils/localization-helper";
+import {ClearableInputComponent, ToggleButtonComponent} from "../../../ui";
+import {createGuidebookTreeViewComponent, type GuidebookTreeExpandedStateSnapshot} from "./outline-tree";
+import {buildGuidebookTreeData, type GuidebookTreeData} from "../tree-builder";
+import {filterGuidebookTreeByKeyword} from "./search-box";
 import {
 	handleGuidebookBlankCreateCollection,
 	handleGuidebookFileContextAction,
 	handleGuidebookH1ContextAction,
 	handleGuidebookH2ContextAction,
 } from "../menu-actions";
-import { handleGuidebookTreeDragMove } from "../drag-sort-actions";
+import {handleGuidebookTreeDragMove} from "../drag-sort-actions";
 
 let cachedMarkdownFilePath: string | null = null;
 
@@ -331,14 +331,13 @@ function resolveCurrentNovelLibraryName(
 
 
 	const settings = ctx.settings;
-	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
-	if (!matchedLibraryPath) {
+	const guidebookCustomDir = settings.guidebookCustomDir;
+	if (!guidebookCustomDir) {
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 
-	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
-	return segments[segments.length - 1] ?? matchedLibraryPath;
+	const segments = guidebookCustomDir.split("/").filter((segment) => segment.length > 0);
+	return segments[segments.length - 1] ?? guidebookCustomDir;
 }
 
 function resolveActiveMarkdownFilePath(ctx: PluginContext): string | null {
@@ -353,7 +352,7 @@ async function loadGuidebookTreeData(
 	return buildGuidebookTreeData(
 		ctx.app,
 		{
-			novelLibraries: ctx.settings.novelLibraries,
+			guidebookCustomDir: ctx.settings.guidebookCustomDir,
 			guidebookCollectionOrders: ctx.settings.guidebookCollectionOrders,
 		},
 		activeFilePath,
@@ -372,21 +371,12 @@ function shouldRefreshForVaultEvent(
 	lastMarkdownFilePath: string | null,
 ): boolean {
 	const settings = ctx.settings;
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const referenceFilePath = resolveActiveMarkdownFilePath(ctx) ?? lastMarkdownFilePath ?? cachedMarkdownFilePath;
-	if (!referenceFilePath) {
-		return true;
-	}
-
-	const activeLibraryRoot = novelLibraryService.resolveContainingLibraryRoot(referenceFilePath, normalizedLibraryRoots);
-	if (!activeLibraryRoot) {
+	const guidebookCustomDir = settings.guidebookCustomDir;
+	if (!guidebookCustomDir) {
 		return false;
 	}
-	const guidebookRootPath =
-		latestTreeData?.guidebookRootPath ||
-		novelLibraryService.resolveNovelLibrarySubdirPath(activeLibraryRoot,
-			NOVEL_LIBRARY_SUBDIR_NAMES.guidebook,
-		);
+
+	const guidebookRootPath = latestTreeData?.guidebookRootPath || guidebookCustomDir;
 	if (!guidebookRootPath) {
 		return false;
 	}
@@ -403,10 +393,11 @@ function shouldRefreshForLibraryFolderRename(
 	if (!renamedFolderPath || !previousFolderPath || renamedFolderPath === previousFolderPath) {
 		return false;
 	}
-	const libraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
-	if (libraryRoots.length === 0) {
+	const guidebookCustomDir = ctx.settings.guidebookCustomDir;
+	if (!guidebookCustomDir) {
 		return false;
 	}
+	const libraryRoots = [guidebookCustomDir];
 	return libraryRoots.some((libraryRoot) =>
 		novelLibraryService.isSameOrChildPath(libraryRoot, previousFolderPath) ||
 		novelLibraryService.isSameOrChildPath(previousFolderPath, libraryRoot) ||

@@ -1,10 +1,10 @@
-import { EditorView } from "@codemirror/view";
-import { MarkdownView, TFile, type Plugin } from "obsidian";
-import { type SettingDatas } from "../../core";
-import type { GuidebookKeywordPreviewItem } from "../text-detection/rules/guidebook-keyword";
-import { GuidebookPreviewPopover } from "./views/preview-popover";
+import {EditorView} from "@codemirror/view";
+import {MarkdownView, type Plugin, TFile} from "obsidian";
+import {type SettingDatas} from "../../core";
+import type {GuidebookKeywordPreviewItem} from "../text-detection/rules/guidebook-keyword";
+import {GuidebookPreviewPopover} from "./views/preview-popover";
 
-import { openMarkdownFileWithoutDuplicate } from "../../utils";
+import {openMarkdownFileWithoutDuplicate} from "../../utils";
 
 interface GuidebookPreviewControllerOptions {
 	getSettings: () => SettingDatas;

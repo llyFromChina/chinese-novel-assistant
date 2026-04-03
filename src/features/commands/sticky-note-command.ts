@@ -1,12 +1,12 @@
-import { Notice, type Plugin } from "obsidian";
-import { type PluginContext, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
+import {Notice, type Plugin} from "obsidian";
+import {NovelLibraryService, type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
 import {
 	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
 	STICKY_NOTE_FLOAT_DEFAULT_WIDTH,
 	STICKY_NOTE_FLOAT_LEFT_GAP,
 } from "../sticky-note";
-import { StickyNoteRepository } from "../sticky-note/repository";
+import {StickyNoteRepository} from "../sticky-note/repository";
 
 export function registerStickyNoteCommands(plugin: Plugin, ctx: PluginContext): void {
 	const repository = new StickyNoteRepository(ctx.app);
@@ -76,24 +76,12 @@ async function runCreateStickyNoteCommand(
 }
 
 function resolveTargetStickyNoteRootPath(ctx: PluginContext, novelLibraryService: NovelLibraryService): string | null {
-	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
-	if (normalizedLibraryRoots.length === 0) {
+	const stickyNoteCustomDir = ctx.settings.stickyNoteCustomDir;
+	if (!stickyNoteCustomDir) {
 		return null;
 	}
 
-	const activeFilePath = ctx.app.workspace.getActiveFile()?.path ?? "";
-	const activeLibraryRoot = activeFilePath
-		? novelLibraryService.resolveContainingLibraryRoot(activeFilePath, normalizedLibraryRoots)
-		: null;
-	const targetLibraryRoot = activeLibraryRoot ?? normalizedLibraryRoots[0] ?? "";
-	if (!targetLibraryRoot) {
-		return null;
-	}
-
-	const stickyRootPath = novelLibraryService.resolveNovelLibrarySubdirPath(targetLibraryRoot,
-		NOVEL_LIBRARY_SUBDIR_NAMES.stickyNote,
-	);
-	const normalizedStickyRootPath = novelLibraryService.normalizeVaultPath(stickyRootPath);
+	const normalizedStickyRootPath = novelLibraryService.normalizeVaultPath(stickyNoteCustomDir);
 	return normalizedStickyRootPath.length > 0 ? normalizedStickyRootPath : null;
 }
 

@@ -1,13 +1,9 @@
-import { Annotation, Compartment, Prec } from "@codemirror/state";
-import { EditorView, gutter, GutterMarker, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import { MarkdownView, Plugin, TFile } from "obsidian";
-import { type PluginContext, type SettingDatas, NovelLibraryService, bindVaultChangeWatcher } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
-import {
-	countMarkdownCharacters,
-	hasExcalidrawFrontmatter,
-	resolveCharacterMilestoneLines,
-} from "./count-engine";
+import {Annotation, Compartment, Prec} from "@codemirror/state";
+import {EditorView, gutter, GutterMarker, ViewPlugin, type ViewUpdate} from "@codemirror/view";
+import {MarkdownView, Plugin, TFile} from "obsidian";
+import {bindVaultChangeWatcher, NovelLibraryService, type PluginContext, type SettingDatas} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
+import {countMarkdownCharacters, hasExcalidrawFrontmatter, resolveCharacterMilestoneLines,} from "./count-engine";
 
 const FOLDER_BADGE_CLASS = "cna-character-count-folder-badge";
 const FILE_BADGE_CLASS = "cna-character-count-file-badge";
@@ -308,12 +304,19 @@ class CharacterCountFeature {
 	}
 
 	private buildScope(settings: SettingDatas): CountScope {
-		const libraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
+		// 使用所有自定义目录作为库根路径
+		const libraryRoots = [
+			settings.guidebookCustomDir,
+			settings.stickyNoteCustomDir,
+			settings.annotationCustomDir,
+			settings.timelineCustomDir,
+			settings.snippetCustomDir,
+			settings.proofreadDictionaryCustomDir,
+		].filter((dir): dir is string => !!dir);
 
 		const excludedRootsByLibrary = new Map<string, string[]>();
 		for (const libraryRoot of libraryRoots) {
-			const excludedRoots = this.novelLibraryService.resolveNovelLibrarySubdirPaths(libraryRoot);
-			excludedRootsByLibrary.set(libraryRoot, excludedRoots);
+			excludedRootsByLibrary.set(libraryRoot, []);
 		}
 
 		return {

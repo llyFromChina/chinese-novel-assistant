@@ -1,6 +1,6 @@
-import type { App, TFile } from "obsidian";
-import { NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, type SettingDatas } from "../../core";
-import { GuidebookMarkdownParser } from "./markdown-parser";
+import type {App, TFile} from "obsidian";
+import {NovelLibraryService, type SettingDatas} from "../../core";
+import {GuidebookMarkdownParser} from "./markdown-parser";
 
 export interface GuidebookTreeH2Node {
 	title: string;
@@ -35,9 +35,9 @@ export interface GuidebookTreeData {
 	files: GuidebookTreeFileNode[];
 }
 
-type GuidebookTreeBuildSettings = Pick<
+export type GuidebookTreeBuildSettings = Pick<
 	SettingDatas,
-	"novelLibraries" | "guidebookCollectionOrders"
+	"guidebookCustomDir" | "guidebookCollectionOrders"
 >;
 
 interface GuidebookTreeFileBucket extends GuidebookTreeFileNode {
@@ -62,103 +62,100 @@ const parsedGuidebookFileCacheByPath = new Map<string, ParsedGuidebookFileCacheE
 const guidebookTreeCacheByRootPath = new Map<string, GuidebookTreeCacheEntry>();
 
 export async function buildGuidebookTreeData(
-	app: App,
-	settings: GuidebookTreeBuildSettings,
-	activeFilePath: string | null,
-): Promise<GuidebookTreeData | null> {
-	const libraryService = new NovelLibraryService(app);
-	const normalizedLibraryRoots = libraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const containingLibraryRoot = activeFilePath
-		? libraryService.resolveContainingLibraryRoot(activeFilePath, normalizedLibraryRoots)
-		: null;
-	if (!containingLibraryRoot) {
-		return null;
-	}
+		app: App,
+		settings: GuidebookTreeBuildSettings,
+		activeFilePath: string | null,
+	): Promise<GuidebookTreeData | null> {
+		const libraryService = new NovelLibraryService(app);
+		const guidebookCustomDir = settings.guidebookCustomDir;
+		if (!guidebookCustomDir) {
+			return null;
+		}
 
-	const guidebookRootPath = libraryService.resolveNovelLibrarySubdirPath(containingLibraryRoot,
-		NOVEL_LIBRARY_SUBDIR_NAMES.guidebook,
-	);
-	if (!guidebookRootPath) {
-		return {
-			libraryRootPath: containingLibraryRoot,
-			guidebookRootPath: "",
-			files: [],
-		};
-	}
-
-	const guidebookMarkdownFiles = app.vault
-		.getMarkdownFiles()
-		.filter((file) => libraryService.isSameOrChildPath(file.path, guidebookRootPath))
-		.sort(compareByFileCreationTime);
-	const guidebookFileSignature = guidebookMarkdownFiles
-		.map((file) => `${file.path}\u0000${file.stat.mtime}\u0000${file.stat.size}\u0000${file.stat.ctime}`)
-		.join("\u0001");
-	const orderedSourcePaths = settings.guidebookCollectionOrders[guidebookRootPath] ?? [];
-	const orderedSourcePathsKey = orderedSourcePaths.join("\u0001");
-	const cachedTree = guidebookTreeCacheByRootPath.get(guidebookRootPath);
-	if (cachedTree && cachedTree.signature === guidebookFileSignature && cachedTree.orderedSourcePathsKey === orderedSourcePathsKey) {
-		return cachedTree.data;
-	}
-
-	const fileBucketByName = new Map<string, GuidebookTreeFileBucket>();
-	const activeGuidebookPaths = new Set<string>();
-	for (const file of guidebookMarkdownFiles) {
-		activeGuidebookPaths.add(file.path);
-		const h1List = await resolveParsedGuidebookTreeByFile(app, file);
-
-		const fileNameKey = file.basename;
-		let fileBucket = fileBucketByName.get(fileNameKey);
-		if (!fileBucket) {
-			fileBucket = {
-				fileName: file.basename,
-				stableKey: String(file.stat.ctime),
-				sourcePaths: [],
-				h1List: [],
-				h2Count: 0,
-				firstFileCtime: file.stat.ctime,
+		const guidebookRootPath = libraryService.normalizeVaultPath(guidebookCustomDir);
+		if (!guidebookRootPath) {
+			return {
+				libraryRootPath: guidebookRootPath,
+				guidebookRootPath: "",
+				files: [],
 			};
-			fileBucketByName.set(fileNameKey, fileBucket);
 		}
-		const targetBucket = fileBucket;
 
-		targetBucket.sourcePaths.push(file.path);
-		targetBucket.h1List.push(...h1List);
-		targetBucket.h2Count += h1List.reduce((total, h1Node) => total + h1Node.h2List.length, 0);
-		if (file.stat.ctime < targetBucket.firstFileCtime) {
-			targetBucket.firstFileCtime = file.stat.ctime;
-			targetBucket.stableKey = String(file.stat.ctime);
+		const guidebookMarkdownFiles = app.vault
+			.getMarkdownFiles()
+			.filter((file) => libraryService.isSameOrChildPath(file.path, guidebookRootPath))
+			.sort(compareByFileCreationTime);
+		const guidebookFileSignature = guidebookMarkdownFiles
+			.map((file) => `${file.path}\u0000${file.stat.mtime}\u0000${file.stat.size}\u0000${file.stat.ctime}`)
+			.join("\u0001");
+		const orderedSourcePaths = settings.guidebookCollectionOrders[guidebookRootPath] ?? [];
+		const orderedSourcePathsKey = orderedSourcePaths.join("\u0001");
+		const cachedTree = guidebookTreeCacheByRootPath.get(guidebookRootPath);
+		if (cachedTree && cachedTree.signature === guidebookFileSignature && cachedTree.orderedSourcePathsKey === orderedSourcePathsKey) {
+			return cachedTree.data;
 		}
-	}
-	pruneGuidebookFileParseCache(guidebookRootPath, activeGuidebookPaths);
 
-	const collectionOrderMap = buildCollectionOrderMap(orderedSourcePaths);
-	const files = Array.from(fileBucketByName.values())
-		.sort((left, right) =>
-			compareByCollectionOrder(
-				left,
-				right,
-				collectionOrderMap,
-			),
-		)
-		.map((bucket) => ({
-			fileName: bucket.fileName,
-			stableKey: String(bucket.firstFileCtime),
-			sourcePaths: bucket.sourcePaths,
-			h1List: bucket.h1List,
-			h2Count: bucket.h2Count,
-		}));
+		const fileBucketByName = new Map<string, GuidebookTreeFileBucket>();
+		const activeGuidebookPaths = new Set<string>();
+		for (const file of guidebookMarkdownFiles) {
+			activeGuidebookPaths.add(file.path);
+			const h1List = await resolveParsedGuidebookTreeByFile(app, file);
 
-	const treeData: GuidebookTreeData = {
-		libraryRootPath: containingLibraryRoot,
-		guidebookRootPath,
-		files,
-	};
-	guidebookTreeCacheByRootPath.set(guidebookRootPath, {
-		signature: guidebookFileSignature,
-		orderedSourcePathsKey,
-		data: treeData,
-	});
-	return treeData;
+			const fileNameKey = file.basename;
+			let fileBucket = fileBucketByName.get(fileNameKey);
+			if (!fileBucket) {
+				fileBucket = {
+					fileName: file.basename,
+					stableKey: String(file.stat.ctime),
+					sourcePaths: [],
+					h1List: [],
+					h2Count: 0,
+					firstFileCtime: file.stat.ctime,
+				};
+				fileBucketByName.set(fileNameKey, fileBucket);
+			}
+			const targetBucket = fileBucket;
+
+			targetBucket.sourcePaths.push(file.path);
+			targetBucket.h1List.push(...h1List);
+			targetBucket.h2Count += h1List.reduce((total, h1Node) => total + h1Node.h2List.length, 0);
+			if (file.stat.ctime < targetBucket.firstFileCtime) {
+				targetBucket.firstFileCtime = file.stat.ctime;
+				targetBucket.stableKey = String(file.stat.ctime);
+			}
+		}
+		pruneGuidebookFileParseCache(guidebookRootPath, activeGuidebookPaths);
+
+		const collectionOrderMap = buildCollectionOrderMap(orderedSourcePaths);
+		const files = Array.from(fileBucketByName.values())
+			.sort((left, right) =>
+				compareByCollectionOrder(
+					left,
+					right,
+					collectionOrderMap,
+				),
+			)
+			.map((bucket) => ({
+				fileName: bucket.fileName,
+				stableKey: bucket.stableKey,
+				sourcePaths: bucket.sourcePaths,
+				h1List: bucket.h1List,
+				h2Count: bucket.h2Count,
+			}));
+
+		const treeData: GuidebookTreeData = {
+			libraryRootPath: guidebookRootPath,
+			guidebookRootPath: guidebookRootPath,
+			files,
+		};
+
+		guidebookTreeCacheByRootPath.set(guidebookRootPath, {
+			signature: guidebookFileSignature,
+			orderedSourcePathsKey: orderedSourcePathsKey,
+			data: treeData,
+		});
+
+		return treeData;
 }
 
 function compareByFileCreationTime(left: TFile, right: TFile): number {

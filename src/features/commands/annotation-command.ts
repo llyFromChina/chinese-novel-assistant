@@ -1,11 +1,11 @@
-import { Editor, MarkdownView, Notice, type Plugin } from "obsidian";
-import { type PluginContext } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
-import { normalizeVaultPath } from "../../core/novel-library-service";
-import { resolveEditorViewFromMarkdownView } from "../../utils";
-import { ANNOTATION_COLOR_TYPES, type AnnotationColorType } from "../annotation/color-types";
-import { emitAnnotationCreated } from "../annotation/flash-bus";
-import { AnnotationRepository, type AnnotationSelectionAnchor } from "../annotation/repository";
+import {Editor, MarkdownView, Notice, type Plugin} from "obsidian";
+import {type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
+import {normalizeVaultPath} from "../../core/novel-library-service";
+import {resolveEditorViewFromMarkdownView} from "../../utils";
+import {ANNOTATION_COLOR_TYPES, type AnnotationColorType} from "../annotation/color-types";
+import {emitAnnotationCreated} from "../annotation/flash-bus";
+import {AnnotationRepository, type AnnotationSelectionAnchor} from "../annotation/repository";
 
 export function registerAnnotationCommands(plugin: Plugin, ctx: PluginContext): void {
 	const repository = new AnnotationRepository(ctx.app);

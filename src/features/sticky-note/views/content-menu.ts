@@ -1,6 +1,5 @@
-
-import { showRichTextContentMenu } from "../../../ui";
-import type { StickyNoteRichTextCommand } from "../menu-actions";
+import {showRichTextContentMenu} from "../../../ui";
+import type {StickyNoteRichTextCommand} from "../menu-actions";
 
 interface ShowStickyNoteContentMenuArgs {
 	event: MouseEvent;

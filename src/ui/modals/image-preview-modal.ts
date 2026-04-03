@@ -1,4 +1,4 @@
-import { App, Modal } from "obsidian";
+import {App, Modal} from "obsidian";
 
 interface ImagePreviewModalDeps {
 	src: string;

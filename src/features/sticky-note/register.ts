@@ -1,6 +1,6 @@
-import type { Plugin, WorkspaceLeaf } from "obsidian";
-import { type PluginContext } from "../../core";
-import { StickyNoteSidebarView } from "./views/item-view";
+import type {Plugin, WorkspaceLeaf} from "obsidian";
+import {type PluginContext} from "../../core";
+import {StickyNoteSidebarView} from "./views/item-view";
 
 // 浮动便签的初始参数
 export const STICKY_NOTE_FLOAT_DEFAULT_WIDTH = 292;

@@ -1,6 +1,6 @@
-import type { EditorView } from "@codemirror/view";
-import { type SettingDatas } from "../../../core";
-import type { TextDetectionRule } from "../engine";
+import type {EditorView} from "@codemirror/view";
+import {type SettingDatas} from "../../../core";
+import type {TextDetectionRule} from "../engine";
 
 interface ReplacementMatch {
 	from: number;

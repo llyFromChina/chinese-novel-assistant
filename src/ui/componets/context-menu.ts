@@ -1,5 +1,5 @@
-import { Menu, type IconName } from "obsidian";
-import { toRgba } from "../../utils";
+import {type IconName, Menu} from "obsidian";
+import {toRgba} from "../../utils";
 
 export interface ContextMenuItemOption {
 	kind?: "item";

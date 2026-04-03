@@ -1,4 +1,4 @@
-import { AbstractInputSuggest, type App } from "obsidian";
+import {AbstractInputSuggest, type App} from "obsidian";
 
 export interface InputSuggestOptions<T> {
 	app: App;

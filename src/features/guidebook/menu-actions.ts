@@ -1,14 +1,9 @@
-import { type App, Notice, TFile, type MarkdownView } from "obsidian";
+import {type App, type MarkdownView, Notice, TFile} from "obsidian";
 
-import type {
-	GuidebookTreeData,
-	GuidebookTreeFileNode,
-	GuidebookTreeH1Node,
-	GuidebookTreeH2Node,
-} from "./tree-builder";
-import { GuidebookMarkdownParser } from "./markdown-parser";
-import { askForConfirmation, promptTextInput } from "../../ui";
-import { openMarkdownFileWithoutDuplicate, splitLines } from "../../utils";
+import type {GuidebookTreeData, GuidebookTreeFileNode, GuidebookTreeH1Node, GuidebookTreeH2Node,} from "./tree-builder";
+import {GuidebookMarkdownParser} from "./markdown-parser";
+import {askForConfirmation, promptTextInput} from "../../ui";
+import {openMarkdownFileWithoutDuplicate, splitLines} from "../../utils";
 
 export type GuidebookFileContextAction =
 	| "create_collection"

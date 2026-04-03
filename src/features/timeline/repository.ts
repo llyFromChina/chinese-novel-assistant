@@ -1,18 +1,8 @@
-import { TFile, type App } from "obsidian";
-import {
-	type SettingDatas,
-	NovelLibraryService,
-	NOVEL_LIBRARY_SUBDIR_NAMES,
-} from "../../core";
-import {
-	asNumber,
-	buildRandomToken,
-	extractPlainTextFromMarkdown,
-	isRecord,
-	parseColorHex,
-} from "../../utils";
-import type { TimelineCard, TimelineEntry } from "./views/types";
-import { TIMELINE_DEFAULT_COLOR } from "./color-types";
+import {type App, TFile} from "obsidian";
+import {NovelLibraryService, type SettingDatas,} from "../../core";
+import {asNumber, buildRandomToken, extractPlainTextFromMarkdown, isRecord, parseColorHex,} from "../../utils";
+import type {TimelineCard, TimelineEntry} from "./views/types";
+import {TIMELINE_DEFAULT_COLOR} from "./color-types";
 
 const TIMELINE_FILE_SUFFIX = ".timeline.md";
 const TIMELINE_DATA_BLOCK_WARNING_TEXT = "数据由时间轴功能管理，请勿删除或手动修改";
@@ -41,11 +31,12 @@ export class TimelineRepository {
 	}
 
 	resolveTimelineRootPaths(settings: SettingDatas): string[] {
-		const roots = settings.novelLibraries
-			.map((libraryPath) => this.resolveTimelineRootPathByLibraryRoot(libraryPath))
-			.map((path) => this.novelLibraryService.normalizeVaultPath(path))
-			.filter((path) => path.length > 0);
-		return Array.from(new Set(roots));
+		const timelineCustomDir = settings.timelineCustomDir;
+		if (!timelineCustomDir) {
+			return [];
+		}
+		const normalizedPath = this.novelLibraryService.normalizeVaultPath(timelineCustomDir);
+		return normalizedPath ? [normalizedPath] : [];
 	}
 
 	resolveScopedTimelineRootPaths(settings: SettingDatas, preferredFilePath?: string | null): string[] {
@@ -53,34 +44,23 @@ export class TimelineRepository {
 		if (allRoots.length === 0) {
 			return allRoots;
 		}
-		const referencePath = typeof preferredFilePath === "string" ? preferredFilePath : "";
-		if (!referencePath) {
-			return [];
-		}
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		const matchedLibraryRoot = this.novelLibraryService.resolveContainingLibraryRoot(referencePath, normalizedLibraryRoots);
-		if (!matchedLibraryRoot) {
-			return [];
-		}
-		const timelineRootPath = this.resolveTimelineRootPathByLibraryRoot(matchedLibraryRoot);
-		const normalizedTimelineRootPath = this.novelLibraryService.normalizeVaultPath(timelineRootPath);
-		return normalizedTimelineRootPath ? [normalizedTimelineRootPath] : allRoots;
+		// 直接返回所有时间轴根路径，因为现在只有一个目录
+		return allRoots;
 	}
 
 	resolveTargetTimelinePath(settings: SettingDatas, preferredFilePath?: string | null): string | null {
-		const normalizedLibraryRoots = this.novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-		if (normalizedLibraryRoots.length === 0) {
+		const timelineCustomDir = settings.timelineCustomDir;
+		if (!timelineCustomDir) {
 			return null;
 		}
-		const referencePath = typeof preferredFilePath === "string" ? preferredFilePath : "";
-		const matchedLibraryRoot = referencePath
-			? this.novelLibraryService.resolveContainingLibraryRoot(referencePath, normalizedLibraryRoots)
-			: null;
-		const targetLibraryRoot = matchedLibraryRoot ?? normalizedLibraryRoots[0] ?? "";
-		if (!targetLibraryRoot) {
+		const normalizedTimelineDir = this.novelLibraryService.normalizeVaultPath(timelineCustomDir);
+		if (!normalizedTimelineDir) {
 			return null;
 		}
-		return this.resolveTimelinePathByLibraryRoot(targetLibraryRoot);
+		// 默认时间轴文件名
+		return this.novelLibraryService.normalizeVaultPath(
+			`${normalizedTimelineDir}/timeline${TIMELINE_FILE_SUFFIX}`,
+		);
 	}
 
 	async listCards(settings: SettingDatas, rootPaths?: string[]): Promise<TimelineCard[]> {
@@ -220,29 +200,7 @@ export class TimelineRepository {
 		return this.resolveTimelineRootPaths(settings);
 	}
 
-	private resolveTimelineRootPathByLibraryRoot(libraryRoot: string): string {
-		return this.novelLibraryService.resolveNovelLibrarySubdirPath(
-			libraryRoot,
-			NOVEL_LIBRARY_SUBDIR_NAMES.timeline,
-		);
-	}
 
-	private resolveTimelinePathByLibraryRoot(libraryRoot: string): string {
-		const normalizedLibraryRoot = this.novelLibraryService.normalizeVaultPath(libraryRoot);
-		if (!normalizedLibraryRoot) {
-			return "";
-		}
-		const timelineRootPath = this.resolveTimelineRootPathByLibraryRoot(normalizedLibraryRoot);
-		const normalizedTimelineRootPath = this.novelLibraryService.normalizeVaultPath(timelineRootPath);
-		if (!normalizedTimelineRootPath) {
-			return "";
-		}
-		const segments = normalizedLibraryRoot.split("/").filter((segment) => segment.length > 0);
-		const libraryName = segments[segments.length - 1] ?? "timeline";
-		return this.novelLibraryService.normalizeVaultPath(
-			`${normalizedTimelineRootPath}/${libraryName}${TIMELINE_FILE_SUFFIX}`,
-		);
-	}
 
 	private async readCardsFromTimelineFile(file: TFile): Promise<TimelineCard[]> {
 		const raw = await this.app.vault.cachedRead(file);

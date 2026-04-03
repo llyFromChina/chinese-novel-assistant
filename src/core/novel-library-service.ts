@@ -1,19 +1,5 @@
-import { App, TFolder } from "obsidian";
-import type { SettingDatas } from "./setting-datas";
-
-const NOVEL_LIBRARY_FEATURE_DIR_NAME = "00_功能库";
-
-export const NOVEL_LIBRARY_SUBDIR_NAMES = {
-	guidebook: "设定库",
-	stickyNote: "便签库",
-	annotation: "批注库",
-	timeline: "时间轴库",
-	snippet: "片段库",
-	proofreadDictionary: "纠错词库",
-} as const;
-
-type NovelLibrarySubdirKey = keyof typeof NOVEL_LIBRARY_SUBDIR_NAMES;
-const NOVEL_LIBRARY_SUBDIR_KEYS = Object.keys(NOVEL_LIBRARY_SUBDIR_NAMES) as NovelLibrarySubdirKey[];
+import {App, TFolder} from "obsidian";
+import type {SettingDatas} from "./setting-datas";
 
 export function normalizeVaultPath(value: string): string {
 	return value
@@ -30,151 +16,8 @@ export class NovelLibraryService {
 		this.app = app;
 	}
 
-	private normalizeNovelLibrary(value: string): string {
-		return value.trim().toLowerCase();
-	}
-
-	hasNovelLibrary(novelLibraries: string[], value: string): boolean {
-		const normalizedValue = this.normalizeNovelLibrary(value);
-		return novelLibraries.some((item) => this.normalizeNovelLibrary(item) === normalizedValue);
-	}
-
 	normalizeVaultPath(value: string): string {
 		return normalizeVaultPath(value);
-	}
-
-	normalizeLibraryRoots(libraryPaths: string[]): string[] {
-		return Array.from(
-			new Set(
-				libraryPaths
-					.map((path) => this.normalizeVaultPath(path))
-					.filter((path) => path.length > 0),
-			),
-		).sort((left, right) => right.length - left.length);
-	}
-
-	isSameOrChildPath(path: string, root: string): boolean {
-		const normalizedPath = this.normalizeVaultPath(path);
-		const normalizedRoot = this.normalizeVaultPath(root);
-		if (!normalizedPath || !normalizedRoot) {
-			return false;
-		}
-		return normalizedPath === normalizedRoot || normalizedPath.startsWith(`${normalizedRoot}/`);
-	}
-
-	resolveContainingLibraryRoot(path: string, libraryRoots: string[]): string | null {
-		const normalizedPath = this.normalizeVaultPath(path);
-		if (!normalizedPath) {
-			return null;
-		}
-
-		const normalizedRoots = this.normalizeLibraryRoots(libraryRoots);
-		for (const root of normalizedRoots) {
-			if (this.isSameOrChildPath(normalizedPath, root)) {
-				return root;
-			}
-		}
-		return null;
-	}
-
-	isPathInLibraries(path: string, libraryRoots: string[]): boolean {
-		return this.resolveContainingLibraryRoot(path, libraryRoots) !== null;
-	}
-
-	isInFeatureRoot(path: string, settings: Pick<SettingDatas, "novelLibraries">): boolean {
-		const libraryRoot = this.resolveContainingLibraryRoot(path, settings.novelLibraries);
-		if (!libraryRoot) {
-			return false;
-		}
-
-		const featureRoot = this.resolveNovelLibraryFeatureRootPath(libraryRoot);
-		if (!featureRoot) {
-			return false;
-		}
-
-		return this.isSameOrChildPath(path, featureRoot);
-	}
-
-	resolveNovelLibrarySubdirPaths(libraryPath: string): string[] {
-		const normalizedLibraryPath = this.normalizeVaultPath(libraryPath);
-		if (!normalizedLibraryPath) {
-			return [];
-		}
-		const featureRootPath = this.resolveFeatureRootPath(normalizedLibraryPath);
-		if (!featureRootPath) {
-			return [];
-		}
-
-		return NOVEL_LIBRARY_SUBDIR_KEYS
-			.map((subdirKey) => this.normalizeVaultPath(`${featureRootPath}/${NOVEL_LIBRARY_SUBDIR_NAMES[subdirKey]}`))
-			.filter((path) => path.length > 0);
-	}
-
-	resolveNovelLibrarySubdirPath(
-		libraryPath: string,
-		subdirName: string,
-	): string {
-		const normalizedLibraryPath = this.normalizeVaultPath(libraryPath);
-		const normalizedSubdirName = this.normalizeVaultPath(subdirName);
-		if (!normalizedLibraryPath || !normalizedSubdirName) {
-			return "";
-		}
-		const featureRootPath = this.resolveFeatureRootPath(normalizedLibraryPath);
-		if (!featureRootPath) {
-			return "";
-		}
-
-		const resolvedSubdirName = this.resolveSubdirName(normalizedSubdirName);
-		return this.normalizeVaultPath(`${featureRootPath}/${resolvedSubdirName}`);
-	}
-
-	resolveNovelLibraryFeatureRootPath(libraryPath: string): string {
-		const normalizedLibraryPath = this.normalizeVaultPath(libraryPath);
-		if (!normalizedLibraryPath) {
-			return "";
-		}
-		return this.resolveFeatureRootPath(normalizedLibraryPath);
-	}
-
-	async ensureNovelLibraryStructure(libraryPath: string): Promise<void> {
-		const normalizedLibraryPath = this.normalizeVaultPath(libraryPath);
-		if (!normalizedLibraryPath) {
-			return;
-		}
-
-		await this.ensureFolderPath(normalizedLibraryPath);
-		const featureRootPath = this.resolveFeatureRootPath(normalizedLibraryPath);
-		if (!featureRootPath) {
-			return;
-		}
-		await this.ensureFolderPath(featureRootPath);
-		for (const subdirKey of NOVEL_LIBRARY_SUBDIR_KEYS) {
-			await this.ensureFolderPath(
-				this.normalizeVaultPath(`${featureRootPath}/${NOVEL_LIBRARY_SUBDIR_NAMES[subdirKey]}`),
-			);
-		}
-	}
-
-	private resolveFeatureRootPath(normalizedLibraryPath: string): string {
-		if (!normalizedLibraryPath) {
-			return "";
-		}
-		return this.normalizeVaultPath(`${normalizedLibraryPath}/${NOVEL_LIBRARY_FEATURE_DIR_NAME}`);
-	}
-
-	private resolveSubdirName(subdirName: string): string {
-		const normalizedInput = this.normalizeVaultPath(subdirName);
-		const normalizedInputLower = normalizedInput.toLowerCase();
-		if (!normalizedInputLower) {
-			return "";
-		}
-
-		for (const subdirKey of NOVEL_LIBRARY_SUBDIR_KEYS) {
-			if (normalizedInputLower === subdirKey.toLowerCase()) {
-				return NOVEL_LIBRARY_SUBDIR_NAMES[subdirKey];
-			}
-		}
-		return normalizedInput;
 	}
 
 	async ensureFolderPath(path: string): Promise<void> {
@@ -197,5 +40,92 @@ export class NovelLibraryService {
 				throw new Error(`Path already exists as file: ${currentPath}`);
 			}
 		}
+	}
+
+	// 获取自定义目录路径
+	getCustomDirPath(customDir: string): string {
+		return this.normalizeVaultPath(customDir);
+	}
+
+	// 检查自定义目录是否存在，如果不存在则创建
+	async ensureCustomDir(customDir: string): Promise<string> {
+		const normalizedPath = this.getCustomDirPath(customDir);
+		if (!normalizedPath) {
+			return "";
+		}
+
+		await this.ensureFolderPath(normalizedPath);
+		return normalizedPath;
+	}
+
+	// 检查路径是否在自定义目录中
+	isPathInCustomDir(path: string, customDir: string): boolean {
+		const normalizedPath = this.normalizeVaultPath(path);
+		const normalizedCustomDir = this.getCustomDirPath(customDir);
+
+		if (!normalizedPath || !normalizedCustomDir) {
+			return false;
+		}
+
+		return normalizedPath === normalizedCustomDir || normalizedPath.startsWith(`${normalizedCustomDir}/`);
+	}
+
+	// 获取功能的自定义目录路径
+	getFeatureCustomDir(settings: SettingDatas, feature: keyof Pick<SettingDatas, "guidebookCustomDir" | "stickyNoteCustomDir" | "annotationCustomDir" | "timelineCustomDir" | "snippetCustomDir" | "proofreadDictionaryCustomDir">): string {
+		return this.getCustomDirPath(settings[feature]);
+	}
+
+	// 确保功能的自定义目录存在
+	async ensureFeatureCustomDir(settings: SettingDatas, feature: keyof Pick<SettingDatas, "guidebookCustomDir" | "stickyNoteCustomDir" | "annotationCustomDir" | "timelineCustomDir" | "snippetCustomDir" | "proofreadDictionaryCustomDir">): Promise<string> {
+		const customDir = settings[feature];
+		return this.ensureCustomDir(customDir);
+	}
+
+	// 检查路径是否相同或为子路径
+	isSameOrChildPath(path: string, rootPath: string): boolean {
+		const normalizedPath = this.normalizeVaultPath(path);
+		const normalizedRootPath = this.normalizeVaultPath(rootPath);
+
+		if (!normalizedPath || !normalizedRootPath) {
+			return false;
+		}
+
+		return normalizedPath === normalizedRootPath || normalizedPath.startsWith(`${normalizedRootPath}/`);
+	}
+
+	// 规范化库根路径（保持向后兼容）
+	normalizeLibraryRoots(libraryRoots: string[]): string[] {
+		return libraryRoots.map((root) => this.normalizeVaultPath(root)).filter((root) => root.length > 0);
+	}
+
+	// 解析包含的库根路径（保持向后兼容）
+	resolveContainingLibraryRoot(filePath: string, libraryRoots: string[]): string | null {
+		const normalizedFilePath = this.normalizeVaultPath(filePath);
+		if (!normalizedFilePath) {
+			return null;
+		}
+
+		for (const libraryRoot of libraryRoots) {
+			const normalizedLibraryRoot = this.normalizeVaultPath(libraryRoot);
+			if (this.isSameOrChildPath(normalizedFilePath, normalizedLibraryRoot)) {
+				return normalizedLibraryRoot;
+			}
+		}
+
+		return null;
+	}
+
+	// 检查路径是否在功能根目录中（保持向后兼容）
+	isInFeatureRoot(filePath: string, settings: SettingDatas): boolean {
+		const customDirs = [
+			settings.guidebookCustomDir,
+			settings.stickyNoteCustomDir,
+			settings.annotationCustomDir,
+			settings.timelineCustomDir,
+			settings.snippetCustomDir,
+			settings.proofreadDictionaryCustomDir
+		];
+
+		return customDirs.some((dir) => dir && this.isPathInCustomDir(filePath, dir));
 	}
 }

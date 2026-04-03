@@ -1,5 +1,5 @@
-import { App, Plugin } from "obsidian";
-import { MarkdownParseService, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, type SettingDatas, bindVaultChangeWatcher } from "../../core";
+import {App, Plugin} from "obsidian";
+import {bindVaultChangeWatcher, MarkdownParseService, NovelLibraryService, type SettingDatas} from "../../core";
 
 interface ProofreadDictLineEntry {
 	wrong: string;
@@ -181,7 +181,14 @@ export class ProofreadDictService {
 
 			try {
 				const parsed = await this.markdownParseService.parseMarkdownFile<ProofreadDictParseResult>({
-					settings: { novelLibraries: settings.novelLibraries },
+					settings: {
+						guidebookCustomDir: settings.guidebookCustomDir,
+						stickyNoteCustomDir: settings.stickyNoteCustomDir,
+						annotationCustomDir: settings.annotationCustomDir,
+						timelineCustomDir: settings.timelineCustomDir,
+						snippetCustomDir: settings.snippetCustomDir,
+						proofreadDictionaryCustomDir: settings.proofreadDictionaryCustomDir,
+					},
 					filePath: file.path,
 					parserId: ProofreadDictService.PARSER_ID,
 				});
@@ -222,13 +229,8 @@ export class ProofreadDictService {
 
 	private resolveDictionaryRoots(settings: SettingDatas): string[] {
 		const roots: string[] = [];
-		for (const libraryPath of settings.novelLibraries) {
-			const dictionaryRoot = this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
-				NOVEL_LIBRARY_SUBDIR_NAMES.proofreadDictionary,
-			);
-			if (!dictionaryRoot) {
-				continue;
-			}
+		const dictionaryRoot = settings.proofreadDictionaryCustomDir;
+		if (dictionaryRoot) {
 			roots.push(dictionaryRoot);
 		}
 		return Array.from(new Set(roots));
@@ -290,7 +292,3 @@ export class ProofreadDictService {
 		}
 	}
 }
-
-
-
-

@@ -1,8 +1,4 @@
-import type {
-	GuidebookTreeData,
-	GuidebookTreeFileNode,
-	GuidebookTreeH1Node,
-} from "../tree-builder";
+import type {GuidebookTreeData, GuidebookTreeFileNode, GuidebookTreeH1Node,} from "../tree-builder";
 
 export interface GuidebookTreeSearchResult {
 	treeData: GuidebookTreeData | null;

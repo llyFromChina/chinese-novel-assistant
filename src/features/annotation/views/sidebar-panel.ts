@@ -1,15 +1,19 @@
-import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
-import { UI, type PluginContext, NovelLibraryService } from "../../../core";
-import { LocalizationConstants } from "../../../utils/localization-constants";
-import { getLocalizedString } from "../../../utils/localization-helper";
-import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
-import { areStringArraysEqual, openMarkdownFileWithoutDuplicate, resolveEditorViewFromMarkdownView } from "../../../utils";
-import { AnnotationRepository } from "../repository";
-import { createAnnotationCardList } from "./card-list";
-import { emitAnnotationLocateFlash, subscribeAnnotationCreated } from "../flash-bus";
-import { ANNOTATION_COLOR_TYPES } from "../color-types";
-import { normalizeVaultPath } from "../../../core/novel-library-service";
-import type { AnnotationCard } from "./types";
+import {type EventRef, MarkdownView, Notice, setIcon, type TAbstractFile, TFile, TFolder} from "obsidian";
+import {NovelLibraryService, type PluginContext, UI} from "../../../core";
+import {LocalizationConstants} from "../../../utils/localization-constants";
+import {getLocalizedString} from "../../../utils/localization-helper";
+import {ClearableInputComponent, showContextMenuAtMouseEvent} from "../../../ui";
+import {
+	areStringArraysEqual,
+	openMarkdownFileWithoutDuplicate,
+	resolveEditorViewFromMarkdownView
+} from "../../../utils";
+import {AnnotationRepository} from "../repository";
+import {createAnnotationCardList} from "./card-list";
+import {emitAnnotationLocateFlash, subscribeAnnotationCreated} from "../flash-bus";
+import {ANNOTATION_COLOR_TYPES} from "../color-types";
+import {normalizeVaultPath} from "../../../core/novel-library-service";
+import type {AnnotationCard} from "./types";
 
 const ANNOTATION_FILTER_MENU_SECTION = "cna-annotation-filter-color";
 const ANNOTATION_FILTER_SCOPE_MENU_SECTION = "cna-annotation-filter-scope";
@@ -552,11 +556,10 @@ function resolveCurrentNovelLibraryName(
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
-	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
-	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
-	if (!matchedLibraryPath) {
+	const annotationCustomDir = settings.annotationCustomDir;
+	if (!annotationCustomDir) {
 		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
-	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
-	return segments[segments.length - 1] ?? matchedLibraryPath;
+	const segments = annotationCustomDir.split("/").filter((segment) => segment.length > 0);
+	return segments[segments.length - 1] ?? annotationCustomDir;
 }

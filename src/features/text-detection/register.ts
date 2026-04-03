@@ -1,18 +1,15 @@
-import type { EditorView } from "@codemirror/view";
-import { MarkdownView, Plugin } from "obsidian";
-import { type PluginContext, NovelLibraryService, bindVaultChangeWatcher } from "../../core";
-import { getLocalizedString } from "../../utils/localization-helper";
-import { createTextDetectionExtension, createTextDetectionForceRefreshTransaction } from "./engine";
-import { createProofreadDictRules } from "./rules/proofread-dict";
-import { createEnPunctuationRules } from "./rules/en-punctuation";
-import { createPairPunctuationRules } from "./rules/pair-punctuation";
-import { GuidebookKeywordHighlightController } from "./rules/guidebook-keyword";
-import { ProofreadDictService } from "./proofread-dict-provider";
-import { GuidebookPreviewController, TextMenuGuidebookController } from "../guidebook";
-import {
-	resolveEditorViewFromMarkdownView,
-	resolveMarkdownViewByEditorView,
-} from "../../utils";
+import type {EditorView} from "@codemirror/view";
+import {MarkdownView, Plugin} from "obsidian";
+import {bindVaultChangeWatcher, NovelLibraryService, type PluginContext} from "../../core";
+import {getLocalizedString} from "../../utils/localization-helper";
+import {createTextDetectionExtension, createTextDetectionForceRefreshTransaction} from "./engine";
+import {createProofreadDictRules} from "./rules/proofread-dict";
+import {createEnPunctuationRules} from "./rules/en-punctuation";
+import {createPairPunctuationRules} from "./rules/pair-punctuation";
+import {GuidebookKeywordHighlightController} from "./rules/guidebook-keyword";
+import {ProofreadDictService} from "./proofread-dict-provider";
+import {GuidebookPreviewController, TextMenuGuidebookController} from "../guidebook";
+import {resolveEditorViewFromMarkdownView, resolveMarkdownViewByEditorView,} from "../../utils";
 
 export function registerTextDetectionFeature(plugin: Plugin, ctx: PluginContext): void {
 	const feature = new TextDetectionFeature(plugin, ctx);
@@ -143,13 +140,17 @@ class TextDetectionFeature {
 			return true;
 		}
 
-		const featureRoots = this.ctx.settings.novelLibraries
-			.map((libraryPath) =>
-				this.novelLibraryService.resolveNovelLibraryFeatureRootPath(libraryPath,
-				),
-			)
-			.filter((path) => path.length > 0);
-		return !featureRoots.some((root) => this.isSameOrChildPath(normalizedFilePath, root));
+		// 检查是否在任何自定义目录中
+		const customDirs = [
+			this.ctx.settings.guidebookCustomDir,
+			this.ctx.settings.stickyNoteCustomDir,
+			this.ctx.settings.annotationCustomDir,
+			this.ctx.settings.timelineCustomDir,
+			this.ctx.settings.snippetCustomDir,
+			this.ctx.settings.proofreadDictionaryCustomDir
+		];
+
+		return !customDirs.some((dir) => dir && this.isSameOrChildPath(normalizedFilePath, dir));
 	}
 
 	private isSameOrChildPath(path: string, root: string): boolean {
