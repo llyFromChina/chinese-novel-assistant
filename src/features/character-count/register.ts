@@ -2,6 +2,7 @@ import { Annotation, Compartment, Prec } from "@codemirror/state";
 import { EditorView, gutter, GutterMarker, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import { MarkdownView, Plugin, TFile } from "obsidian";
 import { type PluginContext, type SettingDatas, NovelLibraryService, bindVaultChangeWatcher } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import {
 	countMarkdownCharacters,
 	hasExcalidrawFrontmatter,
@@ -375,7 +376,7 @@ class CharacterCountFeature {
 		}
 
 		this.statusBarEl.toggleClass("is-hidden", false);
-		const charUnit = this.ctx.t("feature.character_count.unit.char");
+		const charUnit = getLocalizedString("feature.character_count.unit.char");
 		const view = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!view) {
 			this.statusBarEl.setText("");
@@ -404,7 +405,7 @@ class CharacterCountFeature {
 		}
 
 		const scope = this.buildScope(this.ctx.settings);
-		const chapterUnit = this.ctx.t("feature.character_count.unit.chapter");
+		const chapterUnit = getLocalizedString("feature.character_count.unit.chapter");
 		const explorerContainers = this.getFileExplorerContainers();
 		for (const containerEl of explorerContainers) {
 			const folderTitleEls = Array.from(containerEl.querySelectorAll<HTMLElement>(".nav-folder-title[data-path]"));
@@ -473,8 +474,8 @@ class CharacterCountFeature {
 	}
 
 	private formatCharacterCount(charCount: number): string {
-		const charUnit = this.ctx.t("feature.character_count.unit.char");
-		const tenThousandUnit = this.ctx.t("feature.character_count.unit.ten_thousand");
+		const charUnit = getLocalizedString("feature.character_count.unit.char");
+		const tenThousandUnit = getLocalizedString("feature.character_count.unit.ten_thousand");
 		if (charCount >= 10000) {
 			return `${(charCount / 10000).toFixed(1)}${tenThousandUnit}`;
 		}
@@ -693,7 +694,3 @@ function resolveEditorViewFromMarkdownView(view: MarkdownView): MaybeEditorView 
 function isTableCellInlineEditorView(view: EditorView): boolean {
 	return Boolean(view.dom.closest(".table-cell-wrapper"));
 }
-
-
-
-

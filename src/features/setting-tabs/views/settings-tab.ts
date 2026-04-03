@@ -1,5 +1,6 @@
 import { App, Plugin, PluginSettingTab } from "obsidian";
 import { type PluginContext } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { ClearableInputComponent, TabsComponent, type TabDefinition } from "../../../ui";
 import {
 	type SettingsTabRenderContext,
@@ -55,7 +56,7 @@ export class CNASettingTab extends PluginSettingTab {
 		new ClearableInputComponent({
 			containerEl: searchWrapEl,
 			containerClassName: "cna-settings-search-input-container",
-			placeholder: this.ctx.t("settings.search.placeholder"),
+			placeholder: LocalizationConstants.settings.search.placeholder,
 			initialValue: this.searchKeyword,
 			onChange: (value) => {
 				const wasSearchMode = isSearchMode;
@@ -82,42 +83,42 @@ export class CNASettingTab extends PluginSettingTab {
 		return [
 			{
 				id: "general",
-				label: this.ctx.t("settings.tab.global"),
+				label: LocalizationConstants.settings.tab.global,
 				render: (panelEl) => renderGlobalSettings(panelEl, renderContext),
 			},
 			{
 				id: "guidebook",
-				label: this.ctx.t("settings.tab.guidebook"),
+				label: LocalizationConstants.settings.tab.guidebook,
 				render: (panelEl) => renderGuidebookSettings(panelEl, renderContext),
 			},
 			{
 				id: "sticky_note",
-				label: this.ctx.t("settings.tab.sticky_note"),
+				label: LocalizationConstants.settings.tab.sticky_note,
 				render: (panelEl) => renderStickyNoteSettings(panelEl, renderContext),
 			},
 			{
 				id: "annotation",
-				label: this.ctx.t("settings.tab.annotation"),
+				label: LocalizationConstants.settings.tab.annotation,
 				render: (panelEl) => renderAnnotationSettings(panelEl, renderContext),
 			},
 			{
 				id: "proofread",
-				label: this.ctx.t("settings.tab.proofread"),
+				label: LocalizationConstants.settings.tab.proofread,
 				render: (panelEl) => renderProofreadSettings(panelEl, renderContext),
 			},
 			{
 				id: "snippet",
-				label: this.ctx.t("settings.tab.snippet"),
+				label: LocalizationConstants.settings.tab.snippet,
 				render: (panelEl) => renderSnippetSettings(panelEl, renderContext),
 			},
 			{
 				id: "typeset",
-				label: this.ctx.t("settings.tab.typeset"),
+				label: LocalizationConstants.settings.tab.typeset,
 				render: (panelEl) => renderTypesetSettings(panelEl, renderContext),
 			},
 			{
 				id: "other",
-				label: this.ctx.t("settings.tab.other"),
+				label: LocalizationConstants.settings.tab.other,
 				render: (panelEl) => renderOtherSettings(panelEl, renderContext),
 			},
 		];
@@ -266,13 +267,13 @@ export class CNASettingTab extends PluginSettingTab {
 		}
 
 		if (current) {
-			current.setText(this.ctx.t("settings.search.no_results"));
+			current.setText(LocalizationConstants.settings.search.no_results);
 			return;
 		}
 
 		tabPanelEl.createDiv({
 			cls: className,
-			text: this.ctx.t("settings.search.no_results"),
+			text: LocalizationConstants.settings.search.no_results,
 		});
 	}
 }

@@ -4,6 +4,7 @@ import { Editor, MarkdownFileInfo, MarkdownView, Menu, MenuItem, Notice, Plugin,
 import { UI, type PluginContext, bindVaultChangeWatcher } from "../../core";
 import { normalizeVaultPath } from "../../core/novel-library-service";
 import { parseColorHex, resolveEditorViewFromMarkdownView, resolveMarkdownViewByEditorView, toRgba } from "../../utils";
+import { getLocalizedString } from "../../utils/localization-helper";
 import { type AnnotationAnchorSnapshot, type AnnotationSelectionAnchor, AnnotationRepository } from "./repository";
 import { emitAnnotationCreated, subscribeAnnotationLocateFlash, type AnnotationLocateFlashPayload } from "./flash-bus";
 import { scheduleAttachColorSwatchesToLatestMenu } from "../../ui";
@@ -118,16 +119,16 @@ class AnnotationFeature {
 			return;
 		}
 		const annotationTypeItems = ANNOTATION_COLOR_TYPES.map((colorType) => ({
-			title: this.ctx.t(colorType.labelKey),
-			colorHex: colorType.colorHex,
-		}));
+				title: getLocalizedString(colorType.labelKey),
+				colorHex: colorType.colorHex,
+			}));
 		const stopColorSwatchObserver = observeAnnotationTypeColorSwatches(annotationTypeItems);
 		menu.onHide(() => {
 			stopColorSwatchObserver();
 		});
 		menu.addItem((item) => {
 			item
-				.setTitle(this.ctx.t("feature.annotation.editor_menu.create"))
+				.setTitle(getLocalizedString("feature.annotation.editor_menu.create"))
 				.setIcon(UI.ICON.HIGHLIGHTER);
 			if (attachSubmenuByBuilder(item, (submenu) => {
 				for (const annotationTypeItem of annotationTypeItems) {
@@ -156,12 +157,12 @@ class AnnotationFeature {
 	): Promise<void> {
 		try {
 			const createdCard = await this.repository.createEntryAtSelection(
-				this.ctx.settings,
-				sourcePath,
-				selection,
-				this.ctx.t("feature.annotation.default_title"),
-				colorHex,
-			);
+					this.ctx.settings,
+					sourcePath,
+					selection,
+					getLocalizedString("feature.annotation.default_title"),
+					colorHex,
+				);
 			const normalizedPath = normalizeVaultPath(sourcePath);
 			this.anchorSnapshotsBySourcePath.delete(normalizedPath);
 			this.loadedAnchorPaths.delete(normalizedPath);
@@ -174,7 +175,7 @@ class AnnotationFeature {
 			});
 		} catch (error) {
 			console.error("[Chinese Novel Assistant] Failed to create annotation.", error);
-			new Notice(this.ctx.t("feature.annotation.notice.create_failed"));
+			new Notice(getLocalizedString("feature.annotation.notice.create_failed"));
 		}
 	}
 
@@ -715,7 +716,3 @@ function clampOffset(offset: number, docLength: number): number {
 function isAnnotationFilePath(path: string): boolean {
 	return normalizeVaultPath(path).toLowerCase().endsWith(".anno.md");
 }
-
-
-
-

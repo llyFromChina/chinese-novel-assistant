@@ -1,15 +1,16 @@
 import { Setting } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
 
 export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx, refresh } = deps;
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.typeset.section.typeset"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.typeset.section.typeset);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.enable.name"))
-		.setDesc(ctx.t("settings.typeset.enable.desc"))
+		.setName(LocalizationConstants.settings.typeset.enable.name)
+		.setDesc(LocalizationConstants.settings.typeset.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.typesetEnabled).onChange(async (value) => {
@@ -19,8 +20,8 @@ export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.indent.name"))
-		.setDesc(ctx.t("settings.typeset.indent.desc"))
+		.setName(LocalizationConstants.settings.typeset.indent.name)
+		.setDesc(LocalizationConstants.settings.typeset.indent.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.typesetEnabled)
 		.addSlider((slider) =>
@@ -35,8 +36,8 @@ export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.line_spacing.name"))
-		.setDesc(ctx.t("settings.typeset.line_spacing.desc"))
+		.setName(LocalizationConstants.settings.typeset.line_spacing.name)
+		.setDesc(LocalizationConstants.settings.typeset.line_spacing.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.typesetEnabled)
 		.addSlider((slider) =>
@@ -51,8 +52,8 @@ export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.paragraph_spacing.name"))
-		.setDesc(ctx.t("settings.typeset.paragraph_spacing.desc"))
+		.setName(LocalizationConstants.settings.typeset.paragraph_spacing.name)
+		.setDesc(LocalizationConstants.settings.typeset.paragraph_spacing.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.typesetEnabled)
 		.addSlider((slider) =>
@@ -66,11 +67,11 @@ export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTa
 				}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.typeset.section.beautify"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.typeset.section.beautify);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.beautify.heading_icon.name"))
-		.setDesc(ctx.t("settings.typeset.beautify.heading_icon.desc"))
+		.setName(LocalizationConstants.settings.typeset.beautify.heading_icon.name)
+		.setDesc(LocalizationConstants.settings.typeset.beautify.heading_icon.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.typesetShowHeadingIcons).onChange(async (value) => {
@@ -79,8 +80,8 @@ export function renderTypesetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.typeset.beautify.justify.name"))
-		.setDesc(ctx.t("settings.typeset.beautify.justify.desc"))
+		.setName(LocalizationConstants.settings.typeset.beautify.justify.name)
+		.setDesc(LocalizationConstants.settings.typeset.beautify.justify.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.typesetJustifyText).onChange(async (value) => {

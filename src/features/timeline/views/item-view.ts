@@ -1,5 +1,6 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { UI, type PluginContext } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { renderTimelineSidebarPanel } from "./sidebar-panel";
 
 export class TimelineSidebarView extends ItemView {
@@ -17,7 +18,7 @@ export class TimelineSidebarView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return this.ctx.t("feature.timeline.title");
+		return LocalizationConstants.feature.timeline.title;
 	}
 
 	getIcon(): string {

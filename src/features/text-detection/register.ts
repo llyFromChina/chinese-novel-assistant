@@ -1,6 +1,7 @@
 import type { EditorView } from "@codemirror/view";
 import { MarkdownView, Plugin } from "obsidian";
 import { type PluginContext, NovelLibraryService, bindVaultChangeWatcher } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import { createTextDetectionExtension, createTextDetectionForceRefreshTransaction } from "./engine";
 import { createProofreadDictRules } from "./rules/proofread-dict";
 import { createEnPunctuationRules } from "./rules/en-punctuation";
@@ -41,11 +42,11 @@ class TextDetectionFeature {
 		this.guidebookPreviewController = new GuidebookPreviewController(plugin, {
 			getSettings: () => this.ctx.settings,
 			resolveKeywordPreviewItem: (view, keyword) => this.guidebookKeywordHighlightController.getPreviewItemByEditorView(view, keyword),
-			t: (key) => this.ctx.t(key),
+			t: (key) => getLocalizedString(key),
 		});
 		this.textMenuGuidebookController = new TextMenuGuidebookController(plugin, {
 			getSettings: () => this.ctx.settings,
-			t: (key) => this.ctx.t(key),
+			t: (key) => getLocalizedString(key),
 			isGuidebookKeywordInEditor: (view, keyword) => this.guidebookKeywordHighlightController.hasKeywordInEditorView(view, keyword),
 		});
 	}
@@ -155,8 +156,3 @@ class TextDetectionFeature {
 		return path === root || path.startsWith(`${root}/`);
 	}
 }
-
-
-
-
-

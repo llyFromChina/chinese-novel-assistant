@@ -1,5 +1,6 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { UI, type PluginContext } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { renderStickyNoteSidebarPanel } from "./sidebar-panel";
 
 export class StickyNoteSidebarView extends ItemView {
@@ -17,7 +18,7 @@ export class StickyNoteSidebarView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return this.ctx.t("settings.tab.sticky_note");
+		return LocalizationConstants.settings.tab.sticky_note;
 	}
 
 	getIcon(): string {
@@ -39,6 +40,3 @@ export class StickyNoteSidebarView extends ItemView {
 		return Promise.resolve();
 	}
 }
-
-
-

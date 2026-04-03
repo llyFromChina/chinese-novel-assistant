@@ -1,11 +1,11 @@
-import type { TranslationKey } from "../../../lang";
+
 import { showRichTextContentMenu } from "../../../ui";
 import type { StickyNoteRichTextCommand } from "../menu-actions";
 
 interface ShowStickyNoteContentMenuArgs {
 	event: MouseEvent;
 	editorEl: HTMLTextAreaElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	onCommand: (command: StickyNoteRichTextCommand) => void;
 }
 

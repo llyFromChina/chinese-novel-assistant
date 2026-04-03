@@ -1,5 +1,5 @@
 import { Notice, type App } from "obsidian";
-import type { TranslationKey } from "../../../lang";
+
 import { closeAnnotationCardMenu } from "./card-menu";
 import { renderAnnotationCardItem } from "./card-item";
 import type { AnnotationCard } from "./types";
@@ -25,7 +25,7 @@ export interface AnnotationCardListController {
 interface AnnotationCardListDeps {
 	app: App;
 	containerEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	getSettings: () => SettingDatas;
 	getAnnotationRootPaths: () => string[];
 	onCountChange?: (stats: { total: number; visible: number }) => void;
@@ -426,4 +426,3 @@ function compareCardsBySourceOrder(left: AnnotationCard, right: AnnotationCard):
 	}
 	return left.id.localeCompare(right.id);
 }
-

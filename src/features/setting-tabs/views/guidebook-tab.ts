@@ -1,20 +1,21 @@
 import { Setting } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
 
 export function renderGuidebookSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx } = deps;
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.guidebook.section.keyword_highlight"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.guidebook.section.keyword_highlight);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.mode.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.mode.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.mode.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.mode.desc)
 		.setClass("cna-settings-item")
 		.addDropdown((dropdown) =>
 			dropdown
-				.addOption("first", ctx.t("settings.guidebook.keyword.mode.option.first"))
-				.addOption("all", ctx.t("settings.guidebook.keyword.mode.option.all"))
+				.addOption("first", LocalizationConstants.settings.guidebook.keyword.mode.option.first)
+				.addOption("all", LocalizationConstants.settings.guidebook.keyword.mode.option.all)
 				.setValue(ctx.settings.guidebookKeywordHighlightMode)
 				.onChange(async (value) => {
 					if (!isKeywordHighlightMode(value)) {
@@ -25,8 +26,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.background.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.background.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.background.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.background.desc)
 		.setClass("cna-settings-item")
 		.addText((text) =>
 			text.setValue(ctx.settings.guidebookKeywordHighlightBackgroundColor).onChange(async (value) => {
@@ -35,17 +36,17 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.underline_style.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.underline_style.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.underline_style.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.underline_style.desc)
 		.setClass("cna-settings-item")
 		.addDropdown((dropdown) =>
 			dropdown
-				.addOption("none", ctx.t("settings.guidebook.keyword.underline_style.option.none"))
-				.addOption("solid", ctx.t("settings.guidebook.keyword.underline_style.option.solid"))
-				.addOption("dashed", ctx.t("settings.guidebook.keyword.underline_style.option.dashed"))
-				.addOption("dotted", ctx.t("settings.guidebook.keyword.underline_style.option.dotted"))
-				.addOption("double", ctx.t("settings.guidebook.keyword.underline_style.option.double"))
-				.addOption("wavy", ctx.t("settings.guidebook.keyword.underline_style.option.wavy"))
+				.addOption("none", LocalizationConstants.settings.guidebook.keyword.underline_style.option.none)
+				.addOption("solid", LocalizationConstants.settings.guidebook.keyword.underline_style.option.solid)
+				.addOption("dashed", LocalizationConstants.settings.guidebook.keyword.underline_style.option.dashed)
+				.addOption("dotted", LocalizationConstants.settings.guidebook.keyword.underline_style.option.dotted)
+				.addOption("double", LocalizationConstants.settings.guidebook.keyword.underline_style.option.double)
+				.addOption("wavy", LocalizationConstants.settings.guidebook.keyword.underline_style.option.wavy)
 				.setValue(ctx.settings.guidebookKeywordUnderlineStyle)
 				.onChange(async (value) => {
 					if (!isKeywordUnderlineStyle(value)) {
@@ -56,8 +57,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.underline_width.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.underline_width.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.underline_width.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.underline_width.desc)
 		.setClass("cna-settings-item")
 		.addSlider((slider) =>
 			slider
@@ -70,8 +71,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.underline_color.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.underline_color.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.underline_color.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.underline_color.desc)
 		.setClass("cna-settings-item")
 		.addText((text) =>
 			text.setValue(ctx.settings.guidebookKeywordUnderlineColor).onChange(async (value) => {
@@ -80,13 +81,13 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.font_weight.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.font_weight.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.font_weight.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.font_weight.desc)
 		.setClass("cna-settings-item")
 		.addDropdown((dropdown) =>
 			dropdown
-				.addOption("normal", ctx.t("settings.guidebook.keyword.font_weight.option.normal"))
-				.addOption("bold", ctx.t("settings.guidebook.keyword.font_weight.option.bold"))
+				.addOption("normal", LocalizationConstants.settings.guidebook.keyword.font_weight.option.normal)
+				.addOption("bold", LocalizationConstants.settings.guidebook.keyword.font_weight.option.bold)
 				.setValue(ctx.settings.guidebookKeywordFontWeight)
 				.onChange(async (value) => {
 					if (!isKeywordFontWeight(value)) {
@@ -97,13 +98,13 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.font_style.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.font_style.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.font_style.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.font_style.desc)
 		.setClass("cna-settings-item")
 		.addDropdown((dropdown) =>
 			dropdown
-				.addOption("normal", ctx.t("settings.guidebook.keyword.font_style.option.normal"))
-				.addOption("italic", ctx.t("settings.guidebook.keyword.font_style.option.italic"))
+				.addOption("normal", LocalizationConstants.settings.guidebook.keyword.font_style.option.normal)
+				.addOption("italic", LocalizationConstants.settings.guidebook.keyword.font_style.option.italic)
 				.setValue(ctx.settings.guidebookKeywordFontStyle)
 				.onChange(async (value) => {
 					if (!isKeywordFontStyle(value)) {
@@ -114,8 +115,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.keyword.text_color.name"))
-		.setDesc(ctx.t("settings.guidebook.keyword.text_color.desc"))
+		.setName(LocalizationConstants.settings.guidebook.keyword.text_color.name)
+		.setDesc(LocalizationConstants.settings.guidebook.keyword.text_color.desc)
 		.setClass("cna-settings-item")
 		.addText((text) =>
 			text.setValue(ctx.settings.guidebookKeywordTextColor).onChange(async (value) => {
@@ -123,11 +124,11 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 			}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.guidebook.section.preview"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.guidebook.section.preview);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.preview.main_hover.name"))
-		.setDesc(ctx.t("settings.guidebook.preview.main_hover.desc"))
+		.setName(LocalizationConstants.settings.guidebook.preview.main_hover.name)
+		.setDesc(LocalizationConstants.settings.guidebook.preview.main_hover.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.guidebookPreviewMainHoverEnabled).onChange(async (value) => {
@@ -136,8 +137,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.preview.sidebar_hover.name"))
-		.setDesc(ctx.t("settings.guidebook.preview.sidebar_hover.desc"))
+		.setName(LocalizationConstants.settings.guidebook.preview.sidebar_hover.name)
+		.setDesc(LocalizationConstants.settings.guidebook.preview.sidebar_hover.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.guidebookPreviewSidebarHoverEnabled).onChange(async (value) => {
@@ -146,8 +147,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.preview.width.name"))
-		.setDesc(ctx.t("settings.guidebook.preview.width.desc"))
+		.setName(LocalizationConstants.settings.guidebook.preview.width.name)
+		.setDesc(LocalizationConstants.settings.guidebook.preview.width.desc)
 		.setClass("cna-settings-item")
 		.addSlider((slider) =>
 			slider
@@ -160,8 +161,8 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.preview.max_lines.name"))
-		.setDesc(ctx.t("settings.guidebook.preview.max_lines.desc"))
+		.setName(LocalizationConstants.settings.guidebook.preview.max_lines.name)
+		.setDesc(LocalizationConstants.settings.guidebook.preview.max_lines.desc)
 		.setClass("cna-settings-item")
 		.addSlider((slider) =>
 			slider
@@ -173,11 +174,11 @@ export function renderGuidebookSettings(containerEl: HTMLElement, deps: Settings
 				}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.guidebook.section.other_features"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.guidebook.section.other_features);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.guidebook.other.western_name_auto_alias.name"))
-		.setDesc(ctx.t("settings.guidebook.other.western_name_auto_alias.desc"))
+		.setName(LocalizationConstants.settings.guidebook.other.western_name_auto_alias.name)
+		.setDesc(LocalizationConstants.settings.guidebook.other.western_name_auto_alias.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.guidebookWesternNameAutoAliasEnabled).onChange(async (value) => {
@@ -201,4 +202,3 @@ function isKeywordFontWeight(value: string): value is "normal" | "bold" {
 function isKeywordFontStyle(value: string): value is "normal" | "italic" {
 	return value === "normal" || value === "italic";
 }
-

@@ -1,13 +1,13 @@
 import { setIcon } from "obsidian";
 import { UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
+
 import type { TimelineCardMenuCommand } from "../menu-actions";
 import { toRgba } from "../../../utils";
 import { TIMELINE_COLOR_TYPES } from "../color-types";
 
 interface ShowTimelineCardMenuArgs {
 	anchorEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	activeColorHex?: string;
 	onCommand: (command: TimelineCardMenuCommand) => void;
 }

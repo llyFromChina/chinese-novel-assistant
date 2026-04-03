@@ -1,5 +1,7 @@
 import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
 import { UI, type PluginContext, type NovelLibraryService } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
+import { getLocalizedString } from "../../../utils/localization-helper";
 import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
 import { areStringArraysEqual } from "../../../utils";
 import { TIMELINE_COLOR_TYPES } from "../color-types";
@@ -46,7 +48,7 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 	const cardList = createTimelineCardList({
 		app: ctx.app,
 		containerEl: listWrapEl,
-		t: (key) => ctx.t(key),
+		t: (key) => getLocalizedString(key),
 		getSettings: () => ctx.settings,
 		novelLibraryService: ctx.novelLibraryService,
 		getTimelineRootPaths: () => timelineRootPaths,
@@ -186,31 +188,31 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 			event,
 			[
 				...TIMELINE_COLOR_TYPES.map((colorType) => ({
-					title: ctx.t(colorType.labelKey),
-					colorHex: colorType.colorHex,
-					checked: colorFilters.has(colorType.colorHex),
-					section: TIMELINE_FILTER_MENU_SECTION,
-					onClick: () => {
-						const next = new Set(colorFilters);
-						if (next.has(colorType.colorHex)) {
-							next.delete(colorType.colorHex);
-						} else {
-							next.add(colorType.colorHex);
-						}
-						colorFilters = next;
-						cardList.setColorFilters(Array.from(next));
-					},
-				})),
-				{ kind: "separator" as const },
-				{
-					title: ctx.t("feature.timeline.filter.clear"),
-					icon: UI.ICON.CLEAN,
-					disabled: colorFilters.size === 0,
-					onClick: () => {
-						colorFilters = new Set();
-						cardList.setColorFilters([]);
-					},
+				title: getLocalizedString(colorType.labelKey),
+				colorHex: colorType.colorHex,
+				checked: colorFilters.has(colorType.colorHex),
+				section: TIMELINE_FILTER_MENU_SECTION,
+				onClick: () => {
+					const next = new Set(colorFilters);
+					if (next.has(colorType.colorHex)) {
+						next.delete(colorType.colorHex);
+					} else {
+						next.add(colorType.colorHex);
+					}
+					colorFilters = next;
+					cardList.setColorFilters(Array.from(next));
 				},
+			})),
+			{ kind: "separator" as const },
+			{
+				title: LocalizationConstants.feature.timeline.filter.clear,
+				icon: UI.ICON.CLEAN,
+				disabled: colorFilters.size === 0,
+				onClick: () => {
+					colorFilters = new Set();
+					cardList.setColorFilters([]);
+				},
+			},
 			],
 			{
 				menuClassName: "cna-timeline-filter-menu",
@@ -222,9 +224,9 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 
 	const onCreateClick = (): void => {
 		if (ctx.settings.novelLibraries.length === 0) {
-			new Notice(ctx.t("feature.timeline.notice.no_library"));
-			return;
-		}
+		new Notice(LocalizationConstants.feature.timeline.notice.no_library);
+		return;
+	}
 		void cardList.createCardAtEnd(ctx.app.workspace.getActiveFile()?.path ?? null);
 	};
 	addButtonEl.addEventListener("click", onCreateClick);
@@ -244,10 +246,10 @@ export function renderTimelineSidebarPanel(containerEl: HTMLElement, ctx: Plugin
 
 	const updateLocalizedText = (): void => {
 		updateTitleText();
-		addButtonEl.setAttr("aria-label", ctx.t("feature.timeline.action.add"));
-		searchInputEl?.setAttr("placeholder", ctx.t("feature.timeline.search.placeholder"));
-		searchClearButtonEl?.setAttr("aria-label", ctx.t("feature.timeline.search.clear"));
-		filterButtonEl.setAttr("aria-label", ctx.t("feature.timeline.filter.tooltip"));
+		addButtonEl.setAttr("aria-label", LocalizationConstants.feature.timeline.action.add);
+		searchInputEl?.setAttr("placeholder", LocalizationConstants.feature.timeline.search.placeholder);
+		searchClearButtonEl?.setAttr("aria-label", LocalizationConstants.feature.timeline.search.clear);
+		filterButtonEl.setAttr("aria-label", LocalizationConstants.feature.timeline.filter.tooltip);
 		cardList.rerender();
 	};
 
@@ -280,13 +282,13 @@ function resolveCurrentNovelLibraryName(
 		? filePath
 		: (ctx.app.workspace.getActiveFile()?.path ?? "");
 	if (!activeFilePath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
 	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
 	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
 	if (!matchedLibraryPath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
 	return segments[segments.length - 1] ?? matchedLibraryPath;

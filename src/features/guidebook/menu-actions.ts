@@ -1,5 +1,5 @@
 import { type App, Notice, TFile, type MarkdownView } from "obsidian";
-import type { TranslationKey } from "../../lang";
+
 import type {
 	GuidebookTreeData,
 	GuidebookTreeFileNode,
@@ -30,7 +30,7 @@ export type GuidebookH2ContextAction =
 
 interface GuidebookActionContext {
 	app: App;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	treeData: GuidebookTreeData | null;
 	openFileInNewTab?: boolean;
 }
@@ -439,7 +439,7 @@ function resolveCollectionFileByPath(app: App, path: string): TFile | null {
 	return file instanceof TFile ? file : null;
 }
 
-function resolveSingleSourceCollectionFile(app: App, t: (key: TranslationKey) => string, fileNode: GuidebookTreeFileNode): TFile | null {
+function resolveSingleSourceCollectionFile(app: App, t: (key: string) => string, fileNode: GuidebookTreeFileNode): TFile | null {
 	if (fileNode.sourcePaths.length !== 1) {
 		new Notice(t("feature.guidebook.notice.collection_multi_source_unsupported"));
 		return null;
@@ -463,7 +463,7 @@ function buildCollectionPath(guidebookRootPath: string, collectionName: string):
 
 async function promptCollectionName(
 	app: App,
-	t: (key: TranslationKey) => string,
+	t: (key: string) => string,
 	options: {
 		title: string;
 		placeholder: string;
@@ -496,7 +496,7 @@ async function promptCollectionName(
 
 async function promptHeadingName(
 	app: App,
-	t: (key: TranslationKey) => string,
+	t: (key: string) => string,
 	options: {
 		title: string;
 		placeholder: string;
@@ -529,7 +529,7 @@ async function promptHeadingName(
 
 async function promptSettingName(
 	app: App,
-	t: (key: TranslationKey) => string,
+	t: (key: string) => string,
 	file: TFile,
 	treeData: GuidebookTreeData | null,
 	options: {
@@ -549,7 +549,7 @@ async function promptSettingName(
 
 async function promptCategoryName(
 	app: App,
-	t: (key: TranslationKey) => string,
+	t: (key: string) => string,
 	file: TFile,
 	treeData: GuidebookTreeData | null,
 	options: {
@@ -918,4 +918,3 @@ function joinLines(lines: string[]): string {
 function formatTemplate(template: string, values: Record<string, string>): string {
 	return template.replace(/\{(\w+)\}/g, (_match, token: string) => values[token] ?? "");
 }
-

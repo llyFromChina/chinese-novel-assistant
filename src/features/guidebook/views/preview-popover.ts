@@ -1,8 +1,8 @@
 import { Component, type App, MarkdownRenderer, setIcon } from "obsidian";
 import type { GuidebookKeywordPreviewItem } from "../../../features/text-detection/rules/guidebook-keyword";
 import { UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
 import { clamp } from "../../../utils";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { collectGuidebookAliases } from "../alias-utils";
 
 export interface GuidebookPreviewDisplayOptions {
@@ -21,9 +21,7 @@ export interface GuidebookPreviewPopoverRenderContext {
 	component: Component;
 }
 
-export interface GuidebookPreviewPopoverI18n {
-	t: (key: TranslationKey) => string;
-}
+
 
 const PREVIEW_MIN_WIDTH = 200;
 const PREVIEW_MAX_WIDTH = 800;
@@ -44,7 +42,6 @@ export class GuidebookPreviewPopover {
 	private readonly openButtonEl: HTMLButtonElement;
 	private readonly actions: GuidebookPreviewPopoverActions;
 	private readonly renderContext?: GuidebookPreviewPopoverRenderContext;
-	private readonly t: (key: TranslationKey) => string;
 	private currentPreviewItem: GuidebookKeywordPreviewItem | null = null;
 	private currentDisplayOptions: Pick<GuidebookPreviewDisplayOptions, "maxLines"> | null = null;
 	private visible = false;
@@ -54,11 +51,9 @@ export class GuidebookPreviewPopover {
 		hostEl?: HTMLElement,
 		actions?: GuidebookPreviewPopoverActions,
 		renderContext?: GuidebookPreviewPopoverRenderContext,
-		i18n?: GuidebookPreviewPopoverI18n,
 	) {
 		this.actions = actions ?? {};
 		this.renderContext = renderContext;
-		this.t = i18n?.t ?? ((key) => key);
 		this.rootEl = (hostEl ?? document.body).createDiv({ cls: "cna-guidebook-preview-popover" });
 		this.rootEl.hide();
 		const headerEl = this.rootEl.createDiv({ cls: "cna-guidebook-preview-popover__header" });
@@ -70,7 +65,7 @@ export class GuidebookPreviewPopover {
 			cls: "cna-guidebook-preview-popover__action-button",
 			attr: {
 				type: "button",
-				"aria-label": this.t("feature.guidebook.preview.action.locate"),
+				"aria-label": LocalizationConstants.feature.guidebook.preview.action.locate,
 			},
 		});
 		setIcon(this.locateButtonEl, UI.ICON.SEARCH);
@@ -78,7 +73,7 @@ export class GuidebookPreviewPopover {
 			cls: "cna-guidebook-preview-popover__action-button",
 			attr: {
 				type: "button",
-				"aria-label": this.t("feature.guidebook.preview.action.open"),
+				"aria-label": LocalizationConstants.feature.guidebook.preview.action.open,
 			},
 		});
 		setIcon(this.openButtonEl, UI.ICON.PENCIL);
@@ -86,14 +81,14 @@ export class GuidebookPreviewPopover {
 		this.aliasSectionEl = this.rootEl.createDiv({ cls: "cna-guidebook-preview-popover__aliases" });
 		this.aliasLabelEl = this.aliasSectionEl.createDiv({
 			cls: "cna-guidebook-preview-popover__alias-label",
-			text: this.t("feature.guidebook.preview.alias_label"),
+			text: LocalizationConstants.feature.guidebook.preview.alias_label,
 		});
 		this.aliasValueEl = this.aliasSectionEl.createDiv({ cls: "cna-guidebook-preview-popover__alias-value" });
 		this.contentEl = this.rootEl.createDiv({ cls: "cna-guidebook-preview-popover__content" });
 		this.contentEl.addClass("markdown-rendered");
 		this.emptyEl = this.rootEl.createDiv({
 			cls: "cna-guidebook-preview-popover__empty",
-			text: this.t("feature.guidebook.preview.empty_content"),
+			text: LocalizationConstants.feature.guidebook.preview.empty_content,
 		});
 		this.locateButtonEl.addEventListener("click", () => {
 			if (!this.currentPreviewItem) {
@@ -279,20 +274,20 @@ function parseAliasesAndContent(
 	content: string,
 	keyword: string,
 	enableWesternNameAutoAlias: boolean,
-): { aliases: string[]; content: string; status: "死亡" | "失效" | null } {
+): { aliases: string[]; content: string; status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null } {
 	const lines = content.split(/\r?\n/);
 	const keptLines: string[] = [];
-	let status: "死亡" | "失效" | null = null;
+	let status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null = null;
 	for (const line of lines) {
-		const statusMatch = line.match(/【状态】\s*[:：]?\s*(死亡|失效)/);
+		const statusMatch = line.match(/ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â§Ãƒâ€¦Ã‚Â Ãƒâ€šÃ‚Â¶ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“\s*[:ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¼Ãƒâ€¦Ã‚Â¡]?\s*(ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡|ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â )/);
 		if (statusMatch && statusMatch[1] && !status) {
-			status = statusMatch[1] as "死亡" | "失效";
+			status = statusMatch[1] as "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ";
 		}
 		if (statusMatch) {
 			continue;
 		}
 
-		const aliasMatch = line.match(/【别名】\s*[:：]?\s*(.+)$/);
+		const aliasMatch = line.match(/ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¥Ãƒâ€¹Ã¢â‚¬Â Ãƒâ€šÃ‚Â«ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚ÂÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“\s*[:ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¼Ãƒâ€¦Ã‚Â¡]?\s*(.+)$/);
 		if (!aliasMatch) {
 			keptLines.push(line);
 			continue;
@@ -333,14 +328,9 @@ function isMarkdownListItemLine(line: string): boolean {
 	return /^[-*+]\s+/.test(line) || /^\d+\.\s+/.test(line);
 }
 
-function formatPreviewTitle(baseTitle: string, status: "死亡" | "失效" | null): string {
+function formatPreviewTitle(baseTitle: string, status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null): string {
 	if (!status) {
 		return baseTitle;
 	}
-	return `${baseTitle}【${status}】`;
+	return `${baseTitle}ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â${status}ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“`;
 }
-
-
-
-
-

@@ -1,5 +1,7 @@
 import { type PluginContext, UI, type SettingDatas, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../../core";
 import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
+import { getLocalizedString } from "../../../utils/localization-helper";
 import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
 import { createStickyNoteCardList } from "./card-list";
 import type { StickyNoteSortMode, StickyNoteViewOptions } from "./types";
@@ -57,7 +59,7 @@ export function renderStickyNoteSidebarPanel(containerEl: HTMLElement, ctx: Plug
 	const cardList = createStickyNoteCardList({
 		app: ctx.app,
 		containerEl: listWrapEl,
-		t: (key) => ctx.t(key),
+		t: (key) => getLocalizedString(key),
 		getSettings: () => ctx.settings,
 		getStickyNoteRootPaths: () => stickyNoteRootPaths,
 		onVisibleCountChange: (stats) => {
@@ -171,14 +173,14 @@ export function renderStickyNoteSidebarPanel(containerEl: HTMLElement, ctx: Plug
 				? UI.ICON.CALENDAR_ARROW_DOWN
 				: UI.ICON.CALENDAR_ARROW_UP;
 		setIcon(sortButtonEl, iconName);
-		sortButtonEl.setAttr("aria-label", ctx.t(getSortDirectionTooltipKey(sortMode)));
+		sortButtonEl.setAttr("aria-label", getLocalizedString(getSortDirectionTooltipKey(sortMode)));
 	};
 
 	const updateLocalizedText = () => {
 		updateTitleText();
-		actionButtonEl.setAttr("aria-label", ctx.t(getSparklesTooltipKey()));
-		searchInputEl?.setAttr("placeholder", ctx.t("feature.sticky_note.search.placeholder"));
-		searchClearButtonEl?.setAttr("aria-label", ctx.t("feature.sticky_note.search.clear"));
+		actionButtonEl.setAttr("aria-label", getLocalizedString(getSparklesTooltipKey()));
+		searchInputEl?.setAttr("placeholder", LocalizationConstants.feature.sticky_note.search.placeholder);
+		searchClearButtonEl?.setAttr("aria-label", LocalizationConstants.feature.sticky_note.search.clear);
 		updateSortButton();
 		cardList.rerender();
 	};
@@ -186,16 +188,16 @@ export function renderStickyNoteSidebarPanel(containerEl: HTMLElement, ctx: Plug
 	const createStickyNote = async (): Promise<void> => {
 		const stickyRootPath = resolveTargetStickyNoteRootPath(ctx, novelLibraryService);
 		if (!stickyRootPath) {
-			new Notice(ctx.t("command.sticky_note.create.no_library"));
-			return;
-		}
-		try {
-			const file = await repository.createCardFile(stickyRootPath);
-			cardList.applyVaultFileCreateOrModify(file.path);
-		} catch (error) {
-			console.error("[Chinese Novel Assistant] Failed to create sticky note.", error);
-			new Notice(ctx.t("command.sticky_note.create.failed"));
-		}
+		new Notice(LocalizationConstants.command.sticky_note.create.no_library);
+		return;
+	}
+	try {
+		const file = await repository.createCardFile(stickyRootPath);
+		cardList.applyVaultFileCreateOrModify(file.path);
+	} catch (error) {
+		console.error("[Chinese Novel Assistant] Failed to create sticky note.", error);
+		new Notice(LocalizationConstants.command.sticky_note.create.failed);
+	}
 	};
 
 	const updateTitleText = (preferredFilePath?: string | null): void => {
@@ -222,50 +224,50 @@ export function renderStickyNoteSidebarPanel(containerEl: HTMLElement, ctx: Plug
 	const openSortMenu = (event: MouseEvent): void => {
 		showContextMenuAtMouseEvent(event, [
 			{
-				title: ctx.t("feature.sticky_note.sort.created_desc"),
-				icon: UI.ICON.CALENDAR_ARROW_DOWN,
-				checked: sortMode === "created_desc",
-				section: STICKY_NOTE_SORT_MENU_SECTION,
-				onClick: () => {
-					sortMode = "created_desc";
-					updateSortButton();
-					cardList.setSortMode(sortMode);
-				},
+			title: LocalizationConstants.feature.sticky_note.sort.created_desc,
+			icon: UI.ICON.CALENDAR_ARROW_DOWN,
+			checked: sortMode === "created_desc",
+			section: STICKY_NOTE_SORT_MENU_SECTION,
+			onClick: () => {
+				sortMode = "created_desc";
+				updateSortButton();
+				cardList.setSortMode(sortMode);
 			},
-			{
-				title: ctx.t("feature.sticky_note.sort.created_asc"),
-				icon: UI.ICON.CALENDAR_ARROW_UP,
-				checked: sortMode === "created_asc",
-				section: STICKY_NOTE_SORT_MENU_SECTION,
-				onClick: () => {
-					sortMode = "created_asc";
-					updateSortButton();
-					cardList.setSortMode(sortMode);
-				},
+		},
+		{
+			title: LocalizationConstants.feature.sticky_note.sort.created_asc,
+			icon: UI.ICON.CALENDAR_ARROW_UP,
+			checked: sortMode === "created_asc",
+			section: STICKY_NOTE_SORT_MENU_SECTION,
+			onClick: () => {
+				sortMode = "created_asc";
+				updateSortButton();
+				cardList.setSortMode(sortMode);
 			},
-			{ kind: "separator" },
-			{
-				title: ctx.t("feature.sticky_note.sort.modified_desc"),
-				icon: UI.ICON.CALENDAR_ARROW_DOWN,
-				checked: sortMode === "modified_desc",
-				section: STICKY_NOTE_SORT_MENU_SECTION,
-				onClick: () => {
-					sortMode = "modified_desc";
-					updateSortButton();
-					cardList.setSortMode(sortMode);
-				},
+		},
+		{ kind: "separator" },
+		{
+			title: LocalizationConstants.feature.sticky_note.sort.modified_desc,
+			icon: UI.ICON.CALENDAR_ARROW_DOWN,
+			checked: sortMode === "modified_desc",
+			section: STICKY_NOTE_SORT_MENU_SECTION,
+			onClick: () => {
+				sortMode = "modified_desc";
+				updateSortButton();
+				cardList.setSortMode(sortMode);
 			},
-			{
-				title: ctx.t("feature.sticky_note.sort.modified_asc"),
-				icon: UI.ICON.CALENDAR_ARROW_UP,
-				checked: sortMode === "modified_asc",
-				section: STICKY_NOTE_SORT_MENU_SECTION,
-				onClick: () => {
-					sortMode = "modified_asc";
-					updateSortButton();
-					cardList.setSortMode(sortMode);
-				},
+		},
+		{
+			title: LocalizationConstants.feature.sticky_note.sort.modified_asc,
+			icon: UI.ICON.CALENDAR_ARROW_UP,
+			checked: sortMode === "modified_asc",
+			section: STICKY_NOTE_SORT_MENU_SECTION,
+			onClick: () => {
+				sortMode = "modified_asc";
+				updateSortButton();
+				cardList.setSortMode(sortMode);
 			},
+		},
 		]);
 	};
 	sortButtonEl.addEventListener("click", openSortMenu);
@@ -384,13 +386,13 @@ function resolveCurrentNovelLibraryName(
 		? filePath
 		: (ctx.app.workspace.getActiveFile()?.path ?? "");
 	if (!activeFilePath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
 	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
 	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
 	if (!matchedLibraryPath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
 	return segments[segments.length - 1] ?? matchedLibraryPath;
@@ -412,13 +414,3 @@ function getSortDirectionTooltipKey(mode: StickyNoteSortMode): StickyNoteSortToo
 			return "feature.sticky_note.sort.tooltip.desc";
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -15,7 +15,7 @@ interface GuidebookQuickInsertSnapshot {
 interface QueryGuidebookQuickInsertOptions {
 	settings: Pick<
 		SettingDatas,
-		"locale" | "novelLibraries" | "guidebookCollectionOrders" | "guidebookWesternNameAutoAliasEnabled"
+		"novelLibraries" | "guidebookCollectionOrders" | "guidebookWesternNameAutoAliasEnabled"
 	>;
 	filePath: string;
 	query: string;
@@ -166,7 +166,7 @@ export class GuidebookQuickInsertService {
 
 	private tryCollectGuidebookLibraryRoot(
 		path: string,
-		settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		target: Set<string>,
 	): void {
 		const normalizedPath = this.novelLibraryService.normalizeVaultPath(path);
@@ -192,7 +192,7 @@ export class GuidebookQuickInsertService {
 	}
 
 	private invalidateByLibraryRoot(
-		settings: Pick<SettingDatas, "locale">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		libraryRoot: string,
 	): void {
 		const key = this.createCacheKey(settings, libraryRoot);
@@ -201,11 +201,11 @@ export class GuidebookQuickInsertService {
 	}
 
 	private createCacheKey(
-		settings: Pick<SettingDatas, "locale">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		normalizedLibraryPath: string,
 	): string {
 		const normalizedGuidebookDirName = this.novelLibraryService.normalizeVaultPath(NOVEL_LIBRARY_SUBDIR_NAMES.guidebook);
-		return `${settings.locale}::${normalizedLibraryPath}::${normalizedGuidebookDirName}`;
+		return `${normalizedLibraryPath}::${normalizedGuidebookDirName}`;
 	}
 
 	private compareByQuery(left: GuidebookQuickInsertCandidate, right: GuidebookQuickInsertCandidate, query: string): number {
@@ -220,7 +220,3 @@ export class GuidebookQuickInsertService {
 		return left.keyword.localeCompare(right.keyword);
 	}
 }
-
-
-
-

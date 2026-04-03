@@ -1,5 +1,6 @@
 import { Editor, MarkdownView, Notice, type Plugin } from "obsidian";
 import { type PluginContext } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import { normalizeVaultPath } from "../../core/novel-library-service";
 import { resolveEditorViewFromMarkdownView } from "../../utils";
 import { ANNOTATION_COLOR_TYPES, type AnnotationColorType } from "../annotation/color-types";
@@ -11,7 +12,7 @@ export function registerAnnotationCommands(plugin: Plugin, ctx: PluginContext): 
 
 	plugin.addCommand({
 		id: "toggle-annotation-feature",
-		name: ctx.t("command.annotation.toggle.name"),
+		name: getLocalizedString("command.annotation.toggle.name"),
 		callback: () => {
 			void runToggleAnnotationCommand(ctx);
 		},
@@ -20,7 +21,7 @@ export function registerAnnotationCommands(plugin: Plugin, ctx: PluginContext): 
 	for (const annotationType of ANNOTATION_COLOR_TYPES) {
 		plugin.addCommand({
 			id: `create-annotation-${resolveAnnotationTypeCommandSuffix(annotationType)}`,
-			name: `${ctx.t("command.annotation.create.name")}${ctx.t(annotationType.labelKey)}`,
+			name: `${getLocalizedString("command.annotation.create.name")}${getLocalizedString(annotationType.labelKey)}`,
 			checkCallback: (checking) => {
 				if (!ctx.settings.annotationEnabled) {
 					return false;
@@ -44,8 +45,8 @@ async function runToggleAnnotationCommand(ctx: PluginContext): Promise<void> {
 	await ctx.setSettings({ annotationEnabled: nextEnabled });
 	new Notice(
 		nextEnabled
-			? ctx.t("command.annotation.toggle.enabled")
-			: ctx.t("command.annotation.toggle.disabled"),
+			? getLocalizedString("command.annotation.toggle.enabled")
+			: getLocalizedString("command.annotation.toggle.disabled"),
 	);
 }
 
@@ -56,17 +57,17 @@ async function runCreateAnnotationCommand(
 ): Promise<void> {
 	const activeView = ctx.app.workspace.getActiveViewOfType(MarkdownView);
 	if (!activeView?.editor || !activeView.file?.path) {
-		new Notice(ctx.t("command.annotation.create.no_active_editor"));
+		new Notice(getLocalizedString("command.annotation.create.no_active_editor"));
 		return;
 	}
 	const sourcePath = activeView.file.path;
 	if (!repository.isManagedSourceFile(ctx.settings, sourcePath)) {
-		new Notice(ctx.t("command.annotation.create.out_of_scope"));
+		new Notice(getLocalizedString("command.annotation.create.out_of_scope"));
 		return;
 	}
 	const selection = resolveSelectionAnchor(activeView.editor, activeView);
 	if (!selection) {
-		new Notice(ctx.t("command.annotation.create.no_selection"));
+		new Notice(getLocalizedString("command.annotation.create.no_selection"));
 		return;
 	}
 
@@ -75,7 +76,7 @@ async function runCreateAnnotationCommand(
 			ctx.settings,
 			sourcePath,
 			selection,
-			ctx.t("feature.annotation.default_title"),
+			getLocalizedString("feature.annotation.default_title"),
 			colorHex,
 		);
 		emitAnnotationCreated({
@@ -83,10 +84,10 @@ async function runCreateAnnotationCommand(
 			annotationPath: normalizeVaultPath(createdCard.annoPath),
 			annotationId: createdCard.id,
 		});
-		new Notice(ctx.t("command.annotation.create.done"));
+		new Notice(getLocalizedString("command.annotation.create.done"));
 	} catch (error) {
 		console.error("[Chinese Novel Assistant] Failed to create annotation via command.", error);
-		new Notice(ctx.t("command.annotation.create.failed"));
+		new Notice(getLocalizedString("command.annotation.create.failed"));
 	}
 }
 

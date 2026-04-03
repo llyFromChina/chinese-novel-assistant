@@ -1,5 +1,5 @@
 import { Notice, type App } from "obsidian";
-import type { TranslationKey } from "../../../lang";
+
 import { renderStickyNoteCardItem } from "./card-item";
 import type { StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions } from "./types";
 import { closeStickyNoteCardMenu } from "./card-menu";
@@ -21,7 +21,7 @@ export interface StickyNoteCardListController {
 interface StickyNoteCardListDeps {
 	app: App;
 	containerEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	getSettings: () => SettingDatas;
 	getStickyNoteRootPaths: () => string[];
 	onVisibleCountChange?: (stats: { visible: number; total: number }) => void;
@@ -329,9 +329,3 @@ function revokeImageUrls(images: StickyNoteCard["images"]): void {
 		}
 	}
 }
-
-
-
-
-
-

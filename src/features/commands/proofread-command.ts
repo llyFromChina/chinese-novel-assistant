@@ -2,6 +2,7 @@ import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { MarkdownView, Notice, type Plugin, type Editor } from "obsidian";
 import { type PluginContext } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import {
 	ProofreadDictService,
 	collectPunctuationIgnoredRanges,
@@ -23,7 +24,7 @@ interface ViewportSnapshot {
 export function registerProofreadCommands(plugin: Plugin, ctx: PluginContext): void {
 	plugin.addCommand({
 		id: "fix-detected-punctuation-errors",
-		name: ctx.t("command.proofread.fix_punctuation_errors.name"),
+		name: getLocalizedString("command.proofread.fix_punctuation_errors.name"),
 		editorCheckCallback: (checking, editor) => {
 			if (!ctx.settings.proofreadCommonPunctuationEnabled) {
 				return false;
@@ -38,7 +39,7 @@ export function registerProofreadCommands(plugin: Plugin, ctx: PluginContext): v
 
 	plugin.addCommand({
 		id: "fix-detected-proofread-dict-errors",
-		name: ctx.t("command.proofread.fix_proofread_dict_errors.name"),
+		name: getLocalizedString("command.proofread.fix_proofread_dict_errors.name"),
 		editorCheckCallback: (checking, editor) => {
 			if (!ctx.settings.proofreadCustomDictionaryEnabled) {
 				return false;
@@ -62,17 +63,17 @@ function runFixPunctuationCommand(ctx: PluginContext, editor: Editor): void {
 	const fixedCount = enFixResult.replacedCount + pairFixResult.replacedCount;
 
 	if (fixedText === sourceText || fixedCount <= 0) {
-		new Notice(ctx.t("command.proofread.fix_punctuation_errors.no_changes"));
+		new Notice(getLocalizedString("command.proofread.fix_punctuation_errors.no_changes"));
 		return;
 	}
 
 	applyFixedTextPreservingViewport(ctx, editor, fixedText);
-	new Notice(`${ctx.t("command.proofread.fix_punctuation_errors.done")} ${fixedCount}`);
+	new Notice(`${getLocalizedString("command.proofread.fix_punctuation_errors.done")} ${fixedCount}`);
 }
 
 async function runFixProofreadDictCommand(ctx: PluginContext, editor: Editor): Promise<void> {
 	if (!ctx.settings.proofreadCustomDictionaryEnabled) {
-		new Notice(ctx.t("command.proofread.fix_proofread_dict_errors.no_changes"));
+		new Notice(getLocalizedString("command.proofread.fix_proofread_dict_errors.no_changes"));
 		return;
 	}
 
@@ -81,7 +82,7 @@ async function runFixProofreadDictCommand(ctx: PluginContext, editor: Editor): P
 		await proofreadDictService.ensureCacheReady(ctx.settings);
 	} catch (error) {
 		console.error("[Chinese Novel Assistant] Failed to rebuild proofread dictionary cache.", error);
-		new Notice(ctx.t("command.proofread.fix_proofread_dict_errors.failed"));
+		new Notice(getLocalizedString("command.proofread.fix_proofread_dict_errors.failed"));
 		return;
 	}
 
@@ -89,12 +90,12 @@ async function runFixProofreadDictCommand(ctx: PluginContext, editor: Editor): P
 	const sourceText = editor.getValue();
 	const fixResult = fixProofreadDictErrors(sourceText, dictionary.replacements, dictionary.wrongWordsDesc);
 	if (fixResult.replacedCount <= 0 || fixResult.text === sourceText) {
-		new Notice(ctx.t("command.proofread.fix_proofread_dict_errors.no_changes"));
+		new Notice(getLocalizedString("command.proofread.fix_proofread_dict_errors.no_changes"));
 		return;
 	}
 
 	applyFixedTextPreservingViewport(ctx, editor, fixResult.text);
-	new Notice(`${ctx.t("command.proofread.fix_proofread_dict_errors.done")} ${fixResult.replacedCount}`);
+	new Notice(`${getLocalizedString("command.proofread.fix_proofread_dict_errors.done")} ${fixResult.replacedCount}`);
 }
 
 function applyFixedTextPreservingViewport(ctx: PluginContext, editor: Editor, nextText: string): void {

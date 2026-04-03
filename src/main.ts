@@ -1,5 +1,4 @@
 import { Plugin } from "obsidian";
-import { normalizeLocale } from "./lang";
 import { createPluginContext, type ContextHost, type PluginContext, createDefaultSettings, type SettingDatas, SettingStore } from "./core";
 
 // 界面相关
@@ -61,8 +60,7 @@ export default class CNAPlugin extends Plugin {
 	private async loadSettings(): Promise<void> {
 		const loaded = (await this.loadData()) as Partial<SettingDatas> | null;
 		const defaults = createDefaultSettings();
-		const merged = Object.assign({}, defaults, loaded ?? {});
-		merged.locale = normalizeLocale(merged.locale);
+		const merged = Object.assign({}, defaults, loaded);
 		this.settingStore.patch(merged);
 		this.settingStore.notify();
 	}

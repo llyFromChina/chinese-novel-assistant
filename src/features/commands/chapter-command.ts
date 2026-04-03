@@ -1,5 +1,6 @@
 import { TFile, type Plugin } from "obsidian";
 import { DEFAULT_CHAPTER_NAME_FORMAT, type PluginContext } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import { openMarkdownFileWithoutDuplicate } from "../../utils";
 
 const CHAPTER_NUMBER_PATTERN = /第(\d+)章/g;
@@ -10,7 +11,7 @@ const MAX_CHAPTER_FILENAME_CONFLICT_RETRIES = 10000;
 export function registerChapterCommands(plugin: Plugin, ctx: PluginContext): void {
 	plugin.addCommand({
 		id: "create-next-chapter-file",
-		name: ctx.t("command.chapter.create.name"),
+		name: getLocalizedString("command.chapter.create.name"),
 		checkCallback: (checking) => {
 			if (!resolveActiveMarkdownFile(ctx)) {
 				return false;

@@ -1,5 +1,6 @@
 import { Notice, type Plugin } from "obsidian";
 import { type PluginContext, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 import {
 	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
 	STICKY_NOTE_FLOAT_DEFAULT_WIDTH,
@@ -13,7 +14,7 @@ export function registerStickyNoteCommands(plugin: Plugin, ctx: PluginContext): 
 
 	plugin.addCommand({
 		id: "toggle-sticky-note-feature",
-		name: ctx.t("command.sticky_note.toggle.name"),
+		name: getLocalizedString("command.sticky_note.toggle.name"),
 		callback: () => {
 			void runToggleStickyNoteCommand(ctx);
 		},
@@ -21,7 +22,7 @@ export function registerStickyNoteCommands(plugin: Plugin, ctx: PluginContext): 
 
 	plugin.addCommand({
 		id: "create-sticky-note",
-		name: ctx.t("command.sticky_note.create.name"),
+		name: getLocalizedString("command.sticky_note.create.name"),
 		checkCallback: (checking) => {
 			if (!ctx.settings.stickyNoteEnabled) {
 				return false;
@@ -40,8 +41,8 @@ async function runToggleStickyNoteCommand(ctx: PluginContext): Promise<void> {
 	await ctx.setSettings({ stickyNoteEnabled: nextEnabled });
 	new Notice(
 		nextEnabled
-			? ctx.t("command.sticky_note.toggle.enabled")
-			: ctx.t("command.sticky_note.toggle.disabled"),
+			? getLocalizedString("command.sticky_note.toggle.enabled")
+			: getLocalizedString("command.sticky_note.toggle.disabled"),
 	);
 }
 
@@ -52,7 +53,7 @@ async function runCreateStickyNoteCommand(
 ): Promise<void> {
 	const stickyRootPath = resolveTargetStickyNoteRootPath(ctx, novelLibraryService);
 	if (!stickyRootPath) {
-		new Notice(ctx.t("command.sticky_note.create.no_library"));
+		new Notice(getLocalizedString("command.sticky_note.create.no_library"));
 		return;
 	}
 
@@ -67,10 +68,10 @@ async function runCreateStickyNoteCommand(
 			floatW: width,
 			floatH: contentHeight,
 		});
-		new Notice(`${ctx.t("command.sticky_note.create.done")} ${file.basename}`);
+		new Notice(`${getLocalizedString("command.sticky_note.create.done")} ${file.basename}`);
 	} catch (error) {
 		console.error("[Chinese Novel Assistant] Failed to create sticky note.", error);
-		new Notice(ctx.t("command.sticky_note.create.failed"));
+		new Notice(getLocalizedString("command.sticky_note.create.failed"));
 	}
 }
 
@@ -136,5 +137,3 @@ function queryRightSplitRect(): DOMRect | null {
 	}
 	return rightSplitEl.getBoundingClientRect();
 }
-
-

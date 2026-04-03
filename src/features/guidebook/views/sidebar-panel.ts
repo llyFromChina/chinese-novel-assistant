@@ -1,5 +1,7 @@
 import { type PluginContext, UI, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES, type VaultChangeEvent, watchVaultChanges } from "../../../core";
 import { MarkdownView, setIcon, TFile, TFolder } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
+import { getLocalizedString } from "../../../utils/localization-helper";
 import { ClearableInputComponent, ToggleButtonComponent } from "../../../ui";
 import { createGuidebookTreeViewComponent, type GuidebookTreeExpandedStateSnapshot } from "./outline-tree";
 import { buildGuidebookTreeData, type GuidebookTreeData } from "../tree-builder";
@@ -69,23 +71,23 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 	};
 	const treeView = createGuidebookTreeViewComponent(scrollEl, {
 		menuLabels: {
-			createCollection: ctx.t("feature.guidebook.menu.create_collection"),
-			renameCollection: ctx.t("feature.guidebook.menu.rename_collection"),
-			deleteCollection: ctx.t("feature.guidebook.menu.delete_collection"),
-			createCategory: ctx.t("feature.guidebook.menu.create_category"),
-			renameCategory: ctx.t("feature.guidebook.menu.rename_category"),
-			deleteCategory: ctx.t("feature.guidebook.menu.delete_category"),
-			createSetting: ctx.t("feature.guidebook.menu.create_setting"),
-			renameSetting: ctx.t("feature.guidebook.menu.rename_setting"),
-			deleteSetting: ctx.t("feature.guidebook.menu.delete_setting"),
-			editSetting: ctx.t("feature.guidebook.menu.edit_setting"),
+			createCollection: LocalizationConstants.feature.guidebook.menu.create_collection,
+			renameCollection: LocalizationConstants.feature.guidebook.menu.rename_collection,
+			deleteCollection: LocalizationConstants.feature.guidebook.menu.delete_collection,
+			createCategory: LocalizationConstants.feature.guidebook.menu.create_category,
+			renameCategory: LocalizationConstants.feature.guidebook.menu.rename_category,
+			deleteCategory: LocalizationConstants.feature.guidebook.menu.delete_category,
+			createSetting: LocalizationConstants.feature.guidebook.menu.create_setting,
+			renameSetting: LocalizationConstants.feature.guidebook.menu.rename_setting,
+			deleteSetting: LocalizationConstants.feature.guidebook.menu.delete_setting,
+			editSetting: LocalizationConstants.feature.guidebook.menu.edit_setting,
 		},
 		onFileContextAction: (action, fileNode) => {
 			void (async () => {
 				const changed = await handleGuidebookFileContextAction(
 					{
 						app: ctx.app,
-						t: (key) => ctx.t(key),
+						t: (key) => getLocalizedString(key),
 						treeData: latestTreeData,
 						openFileInNewTab: ctx.settings.openFileInNewTab,
 					},
@@ -102,7 +104,7 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 				const changed = await handleGuidebookH1ContextAction(
 					{
 						app: ctx.app,
-						t: (key) => ctx.t(key),
+						t: (key) => getLocalizedString(key),
 						treeData: latestTreeData,
 						openFileInNewTab: ctx.settings.openFileInNewTab,
 					},
@@ -120,7 +122,7 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 				const changed = await handleGuidebookH2ContextAction(
 					{
 						app: ctx.app,
-						t: (key) => ctx.t(key),
+						t: (key) => getLocalizedString(key),
 						treeData: latestTreeData,
 						openFileInNewTab: ctx.settings.openFileInNewTab,
 					},
@@ -138,7 +140,7 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 			void (async () => {
 				const changed = await handleGuidebookBlankCreateCollection({
 					app: ctx.app,
-					t: (key) => ctx.t(key),
+					t: (key) => getLocalizedString(key),
 					treeData: latestTreeData,
 					openFileInNewTab: ctx.settings.openFileInNewTab,
 				});
@@ -152,7 +154,7 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 				const changed = await handleGuidebookTreeDragMove(
 					{
 						app: ctx.app,
-						t: (key) => ctx.t(key),
+						t: (key) => getLocalizedString(key),
 						treeData: latestTreeData,
 						getSettings: () => ctx.settings,
 						setSettings: (patch) => ctx.setSettings(patch),
@@ -174,8 +176,8 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 		className: "cna-right-sidebar-guidebook__toggle-button",
 		onIcon: UI.ICON.COLLAPSE,
 		offIcon: UI.ICON.EXPAND,
-		onTooltip: ctx.t("feature.guidebook.action.collapse_all"),
-		offTooltip: ctx.t("feature.guidebook.action.expand_all"),
+		onTooltip: LocalizationConstants.feature.guidebook.action.collapse_all,
+			offTooltip: LocalizationConstants.feature.guidebook.action.expand_all,
 		initialOn: initialAllExpanded,
 		onToggle: (isOn) => treeView.setAllExpanded(isOn),
 	});
@@ -224,11 +226,11 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 		}
 		renderedTreeSignature = treeSignature;
 		hasRenderedTree = true;
-		treeView.renderData(filteredTreeData, ctx.t("feature.guidebook.tree.empty"));
+		treeView.renderData(filteredTreeData, LocalizationConstants.feature.guidebook.tree.empty);
 	};
 	const updateLocalizedText = (): void => {
-		searchInputEl?.setAttr("placeholder", ctx.t("feature.guidebook.search.placeholder"));
-		searchClearButtonEl?.setAttr("aria-label", ctx.t("feature.guidebook.search.clear"));
+		searchInputEl?.setAttr("placeholder", LocalizationConstants.feature.guidebook.search.placeholder);
+		searchClearButtonEl?.setAttr("aria-label", LocalizationConstants.feature.guidebook.search.clear);
 	};
 
 	const refreshGuidebook = async (preferredFilePath?: string | null): Promise<void> => {
@@ -240,8 +242,8 @@ export function renderGuidebookSidebarPanel(containerEl: HTMLElement, ctx: Plugi
 		titleTextEl.setText(resolveCurrentNovelLibraryName(ctx, novelLibraryService, nextFilePath));
 		const currentSeq = ++refreshSeq;
 		if (!hasRenderedTree) {
-			treeView.renderLoading(ctx.t("feature.guidebook.tree.loading"));
-		}
+		treeView.renderLoading(LocalizationConstants.feature.guidebook.tree.loading);
+	}
 
 		const treeData = (await loadGuidebookTreeData(ctx, nextFilePath ?? null)) ?? null;
 		if (isDisposed || currentSeq !== refreshSeq) {
@@ -324,14 +326,15 @@ function resolveCurrentNovelLibraryName(
 ): string {
 	const activeFilePath = typeof filePath === "string" && filePath.length > 0 ? filePath : null;
 	if (!activeFilePath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
+
 
 	const settings = ctx.settings;
 	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
 	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
 	if (!matchedLibraryPath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 
 	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
@@ -350,7 +353,6 @@ async function loadGuidebookTreeData(
 	return buildGuidebookTreeData(
 		ctx.app,
 		{
-			locale: ctx.settings.locale,
 			novelLibraries: ctx.settings.novelLibraries,
 			guidebookCollectionOrders: ctx.settings.guidebookCollectionOrders,
 		},
@@ -461,12 +463,3 @@ function filterGuidebookTreeExpandedState(source: Record<string, boolean>): Reco
 	}
 	return next;
 }
-
-
-
-
-
-
-
-
-

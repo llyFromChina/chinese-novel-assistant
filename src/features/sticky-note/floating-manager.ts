@@ -1,5 +1,6 @@
 import { MarkdownView, Notice, TFile, type Plugin } from "obsidian";
 import { type PluginContext, bindVaultChangeWatcher, NovelLibraryService, NOVEL_LIBRARY_SUBDIR_NAMES } from "../../core";
+import { getLocalizedString } from "../../utils/localization-helper";
 
 
 import { StickyNoteRepository } from "./repository";
@@ -239,7 +240,7 @@ class StickyNoteFloatingFeature {
 			card,
 			sortMode: "modified_desc",
 			viewOptions: this.resolveFloatingViewOptions(),
-			t: (key) => this.ctx.t(key),
+			t: (key) => getLocalizedString(key),
 			onCardTouched: () => {
 				if (!card.isFloating) {
 					this.removeFloatingWindow(card.sourcePath);
@@ -293,7 +294,7 @@ class StickyNoteFloatingFeature {
 			await this.repository.deleteCard(card);
 		} catch (error) {
 			console.error("[Chinese Novel Assistant] Failed to delete floating sticky note.", error);
-			new Notice(this.ctx.t("feature.sticky_note.notice.delete_failed"));
+			new Notice(getLocalizedString("feature.sticky_note.notice.delete_failed"));
 		} finally {
 			this.removeFloatingWindow(card.sourcePath);
 		}
@@ -322,7 +323,7 @@ class StickyNoteFloatingFeature {
 			await this.repository.saveCard(card);
 		} catch (error) {
 			console.error("[Chinese Novel Assistant] Failed to save floating sticky note.", error);
-			new Notice(this.ctx.t("feature.sticky_note.notice.save_failed"));
+			new Notice(getLocalizedString("feature.sticky_note.notice.save_failed"));
 		}
 	}
 
@@ -661,8 +662,3 @@ function isStickyNoteTabActiveInRightSidebar(): boolean {
 	const selector = `.workspace-split.mod-right-split .workspace-tab-header.is-active[data-type="sticky-note-sidebar"]`;
 	return document.querySelector(selector) !== null;
 }
-
-
-
-
-

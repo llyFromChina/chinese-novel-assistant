@@ -1,8 +1,8 @@
 import { EditorSelection, Prec, type Extension } from "@codemirror/state";
 import { EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import { translate, type TranslationKey } from "../../../lang";
 import { type SettingDatas } from "../../../core";
 import { CandidatePanelComponent } from "../../../ui";
+import { getLocalizedString } from "../../../utils/localization-helper";
 
 export interface TriggerMatch {
 	from: number;
@@ -31,7 +31,7 @@ interface SharedAutocompleteOptions<TCandidate, TContext> {
 	getItemKey: (item: TCandidate, index: number) => string;
 	getItemLabel: (item: TCandidate) => string;
 	resolveInsertion: (item: TCandidate) => CandidateInsertion;
-	emptyTextKey: TranslationKey;
+	emptyTextKey: string;
 }
 
 export function createSharedAutocompleteExt<TCandidate, TContext>(
@@ -128,7 +128,7 @@ export function createSharedAutocompleteExt<TCandidate, TContext>(
 						page: 1,
 						pageSize: Math.max(1, settings.snippetQuickInsertPageSize),
 						selectedIndex: 0,
-						emptyText: translate(settings.locale, options.emptyTextKey),
+						emptyText: getLocalizedString(options.emptyTextKey),
 						anchorRect: new DOMRect(
 							coords.left,
 							coords.top,
@@ -158,8 +158,7 @@ export function createSharedAutocompleteExt<TCandidate, TContext>(
 				}
 
 				private buildFooterText(page: number, totalPages: number): string {
-					const locale = options.getSettings().locale;
-					const template = translate(locale, "feature.snippet.candidate.footer");
+					const template = getLocalizedString("feature.snippet.candidate.footer");
 					return template
 						.replace("{current}", String(page))
 						.replace("{total}", String(totalPages));
@@ -259,5 +258,3 @@ function isInCodeContext(view: EditorView, cursor: number): boolean {
 	}
 	return activeFence !== null;
 }
-
-

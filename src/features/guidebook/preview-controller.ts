@@ -3,13 +3,13 @@ import { MarkdownView, TFile, type Plugin } from "obsidian";
 import { type SettingDatas } from "../../core";
 import type { GuidebookKeywordPreviewItem } from "../text-detection/rules/guidebook-keyword";
 import { GuidebookPreviewPopover } from "./views/preview-popover";
-import type { TranslationKey } from "../../lang";
+
 import { openMarkdownFileWithoutDuplicate } from "../../utils";
 
 interface GuidebookPreviewControllerOptions {
 	getSettings: () => SettingDatas;
 	resolveKeywordPreviewItem: (view: EditorView, keyword: string) => GuidebookKeywordPreviewItem | null;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 }
 
 const GUIDEBOOK_KEYWORD_HIT_CLASS = "cna-guidebook-keyword-hit";
@@ -50,8 +50,6 @@ export class GuidebookPreviewController {
 		}, {
 			app: this.plugin.app,
 			component: this.plugin,
-		}, {
-			t: options.t,
 		});
 	}
 
@@ -434,4 +432,3 @@ function parseH2HeadingTitle(line: string): string | null {
 	title = title.replace(/[ \t]+#+[ \t]*$/, "").trim();
 	return title.length > 0 ? title : null;
 }
-

@@ -1,6 +1,6 @@
 import { Component, MarkdownRenderer, setIcon, TextAreaComponent, type App } from "obsidian";
 import { UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
+
 import { applyRichTextCommand, showRichTextContentMenu } from "../../../ui";
 import { extractPlainTextFromMarkdown, toRgba } from "../../../utils";
 import { applyTimelineCardMenuCommand } from "../menu-actions";
@@ -11,7 +11,7 @@ interface TimelineCardItemDeps {
 	app: App;
 	containerEl: HTMLElement;
 	card: TimelineCard;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	onCardTouched: () => void;
 	onCardDelete: () => void;
 	onInsertBefore: () => void;

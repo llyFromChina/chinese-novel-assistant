@@ -1,5 +1,5 @@
 import { UI } from "../../core";
-import type { TranslationKey } from "../../lang";
+
 import { showContextMenuAtMouseEvent } from "./context-menu";
 
 export type RichTextCommand =
@@ -13,7 +13,7 @@ export type RichTextCommand =
 
 interface RichTextContentMenuItem {
 	command: RichTextCommand;
-	labelKey: TranslationKey;
+	labelKey: string;
 	icon: string;
 	warning?: boolean;
 }
@@ -27,7 +27,7 @@ type RichTextContentMenuOption = RichTextContentMenuItem | RichTextContentMenuSe
 interface ShowRichTextContentMenuArgs {
 	event: MouseEvent;
 	editorEl: HTMLTextAreaElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	onCommand: (command: RichTextCommand) => void;
 }
 

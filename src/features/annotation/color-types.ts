@@ -1,8 +1,8 @@
-import type { TranslationKey } from "../../lang";
+
 
 export interface AnnotationColorType {
 	colorHex: string;
-	labelKey: TranslationKey;
+	labelKey: string;
 }
 
 export const ANNOTATION_COLOR_TYPES: readonly AnnotationColorType[] = [

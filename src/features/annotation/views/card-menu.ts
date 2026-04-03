@@ -1,12 +1,12 @@
 import { setIcon } from "obsidian";
 import { STICKY_NOTE_COLORS, UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
+
 import type { AnnotationCardMenuCommand } from "../menu-actions";
 import { toRgba } from "../../../utils";
 
 interface ShowAnnotationCardMenuArgs {
 	anchorEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	activeColorHex?: string;
 	onCommand: (command: AnnotationCardMenuCommand) => void;
 }

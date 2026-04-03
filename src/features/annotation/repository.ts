@@ -104,7 +104,6 @@ export class AnnotationRepository {
 			return false;
 		}
 		return !this.novelLibraryService.isInFeatureRoot(normalizedSourcePath, {
-			locale: settings.locale,
 			novelLibraries: settings.novelLibraries,
 		});
 	}
@@ -683,7 +682,3 @@ function compareEntriesByRangeStart(left: AnnotationEntry, right: AnnotationEntr
 	}
 	return left.id.localeCompare(right.id);
 }
-
-
-
-

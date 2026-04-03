@@ -1,18 +1,17 @@
 import { App, type FuzzyMatch, FuzzySuggestModal, Notice, TFile } from "obsidian";
-import type { TranslationKey } from "../../lang";
 
 const IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif", "heic", "heif", "tiff"]);
 
 interface VaultImagePickerModalDeps {
 	app: App;
 	files: TFile[];
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	onResult: (file: TFile | null) => void;
 }
 
 class VaultImagePickerModal extends FuzzySuggestModal<TFile> {
 	private readonly files: TFile[];
-	private readonly t: (key: TranslationKey) => string;
+	private readonly t: (key: string) => string;
 	private readonly onResult: (file: TFile | null) => void;
 	private resolved = false;
 
@@ -74,7 +73,7 @@ export function isImageVaultFile(file: TFile): boolean {
 	return IMAGE_EXTENSIONS.has(file.extension.toLowerCase());
 }
 
-export function promptVaultImageFile(app: App, t: (key: TranslationKey) => string): Promise<TFile | null> {
+export function promptVaultImageFile(app: App, t: (key: string) => string): Promise<TFile | null> {
 	const imageFiles = app.vault
 		.getFiles()
 		.filter(isImageVaultFile)
@@ -94,5 +93,3 @@ export function promptVaultImageFile(app: App, t: (key: TranslationKey) => strin
 		}).open();
 	});
 }
-
-

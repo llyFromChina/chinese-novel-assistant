@@ -1,15 +1,16 @@
 import { Setting } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
 
 export function renderSnippetSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx, refresh } = deps;
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.snippet.section.punctuation"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.snippet.section.punctuation);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.snippet.punctuation.auto_complete_pair.name"))
-		.setDesc(ctx.t("settings.snippet.punctuation.auto_complete_pair.desc"))
+		.setName(LocalizationConstants.settings.snippet.punctuation.auto_complete_pair.name)
+		.setDesc(LocalizationConstants.settings.snippet.punctuation.auto_complete_pair.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.autocompletePairPunctuationEnabled).onChange(async (value) => {
@@ -17,11 +18,11 @@ export function renderSnippetSettings(containerEl: HTMLElement, deps: SettingsTa
 			}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.snippet.section.main"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.snippet.section.main);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.snippet.quick_insert.enable.name"))
-		.setDesc(ctx.t("settings.snippet.quick_insert.enable.desc"))
+		.setName(LocalizationConstants.settings.snippet.quick_insert.enable.name)
+		.setDesc(LocalizationConstants.settings.snippet.quick_insert.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.snippetQuickInsertEnabled).onChange(async (value) => {
@@ -31,8 +32,8 @@ export function renderSnippetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.snippet.text_fragment.enable.name"))
-		.setDesc(ctx.t("settings.snippet.text_fragment.enable.desc"))
+		.setName(LocalizationConstants.settings.snippet.text_fragment.enable.name)
+		.setDesc(LocalizationConstants.settings.snippet.text_fragment.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.snippetTextFragmentEnabled).onChange(async (value) => {
@@ -41,8 +42,8 @@ export function renderSnippetSettings(containerEl: HTMLElement, deps: SettingsTa
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.snippet.quick_insert.page_size.name"))
-		.setDesc(ctx.t("settings.snippet.quick_insert.page_size.desc"))
+		.setName(LocalizationConstants.settings.snippet.quick_insert.page_size.name)
+		.setDesc(LocalizationConstants.settings.snippet.quick_insert.page_size.desc)
 		.setClass("cna-settings-item")
 		.addSlider((slider) =>
 			slider

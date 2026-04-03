@@ -1,15 +1,16 @@
 import { Setting } from "obsidian";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
 
 export function renderProofreadSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx, refresh } = deps;
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.proofread.section.common"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.proofread.section.common);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.enable.name"))
-		.setDesc(ctx.t("settings.proofread.common.enable.desc"))
+		.setName(LocalizationConstants.settings.proofread.common.enable.name)
+		.setDesc(LocalizationConstants.settings.proofread.common.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.proofreadCommonPunctuationEnabled).onChange(async (value) => {
@@ -19,7 +20,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_comma.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_comma.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -32,7 +33,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_period.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_period.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -45,7 +46,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_colon.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_colon.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -58,7 +59,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_semicolon.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_semicolon.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -71,7 +72,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_exclamation.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_exclamation.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -84,7 +85,7 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.english_question.name"))
+		.setName(LocalizationConstants.settings.proofread.common.english_question.name)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -97,8 +98,8 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.quote.name"))
-		.setDesc(ctx.t("settings.proofread.common.quote.desc"))
+		.setName(LocalizationConstants.settings.proofread.common.quote.name)
+		.setDesc(LocalizationConstants.settings.proofread.common.quote.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -111,8 +112,8 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.single_quote.name"))
-		.setDesc(ctx.t("settings.proofread.common.single_quote.desc"))
+		.setName(LocalizationConstants.settings.proofread.common.single_quote.name)
+		.setDesc(LocalizationConstants.settings.proofread.common.single_quote.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -125,8 +126,8 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.common.pair_punctuation.name"))
-		.setDesc(ctx.t("settings.proofread.common.pair_punctuation.desc"))
+		.setName(LocalizationConstants.settings.proofread.common.pair_punctuation.name)
+		.setDesc(LocalizationConstants.settings.proofread.common.pair_punctuation.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.proofreadCommonPunctuationEnabled)
 		.addToggle((toggle) =>
@@ -138,11 +139,11 @@ export function renderProofreadSettings(containerEl: HTMLElement, deps: Settings
 				}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.proofread.section.custom"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.proofread.section.custom);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.proofread.custom.enable.name"))
-		.setDesc(ctx.t("settings.proofread.custom.enable.desc"))
+		.setName(LocalizationConstants.settings.proofread.custom.enable.name)
+		.setDesc(LocalizationConstants.settings.proofread.custom.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.proofreadCustomDictionaryEnabled).onChange(async (value) => {

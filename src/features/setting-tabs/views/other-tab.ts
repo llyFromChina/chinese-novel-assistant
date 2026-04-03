@@ -1,36 +1,17 @@
 import { Setting } from "obsidian";
 import { DEFAULT_CHAPTER_NAME_FORMAT } from "../../../core";
-import type { SupportedLocale } from "../../../lang";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
 
 export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
 	const { ctx, refresh } = deps;
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.other.section.common"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.common);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.language.name"))
-		.setDesc(ctx.t("settings.language.desc"))
-		.setClass("cna-settings-item")
-		.addDropdown((dropdown) =>
-			dropdown
-				.addOption("zh_cn", ctx.t("settings.language.option.zh_cn"))
-				.addOption("zh_tw", ctx.t("settings.language.option.zh_tw"))
-				.setValue(ctx.locale)
-				.onChange(async (value) => {
-					if (!isSupportedLocale(value)) {
-						return;
-					}
-
-					await ctx.setSettings({ locale: value });
-					refresh();
-				}),
-		);
-
-	new Setting(panelEl)
-		.setName(ctx.t("settings.other.open_file_in_new_tab.name"))
-		.setDesc(ctx.t("settings.other.open_file_in_new_tab.desc"))
+		.setName(LocalizationConstants.settings.other.open_file_in_new_tab.name)
+		.setDesc(LocalizationConstants.settings.other.open_file_in_new_tab.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.openFileInNewTab).onChange(async (value) => {
@@ -38,11 +19,11 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 			}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.other.section.word_count"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.word_count);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.other.enable_character_count.name"))
-		.setDesc(ctx.t("settings.other.enable_character_count.desc"))
+		.setName(LocalizationConstants.settings.other.enable_character_count.name)
+		.setDesc(LocalizationConstants.settings.other.enable_character_count.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.enableCharacterCount).onChange(async (value) => {
@@ -52,8 +33,8 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.other.enable_character_milestone.name"))
-		.setDesc(ctx.t("settings.other.enable_character_milestone.desc"))
+		.setName(LocalizationConstants.settings.other.enable_character_milestone.name)
+		.setDesc(LocalizationConstants.settings.other.enable_character_milestone.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.enableCharacterCount)
 		.addToggle((toggle) =>
@@ -66,8 +47,8 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 		);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.other.count_only_novel_library.name"))
-		.setDesc(ctx.t("settings.other.count_only_novel_library.desc"))
+		.setName(LocalizationConstants.settings.other.count_only_novel_library.name)
+		.setDesc(LocalizationConstants.settings.other.count_only_novel_library.desc)
 		.setClass("cna-settings-item")
 		.setDisabled(!ctx.settings.enableCharacterCount)
 		.addToggle((toggle) =>
@@ -79,11 +60,11 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 				}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.other.section.generate_chapter"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.generate_chapter);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.other.chapter_name_format.name"))
-		.setDesc(ctx.t("settings.other.chapter_name_format.desc"))
+		.setName(LocalizationConstants.settings.other.chapter_name_format.name)
+		.setDesc(LocalizationConstants.settings.other.chapter_name_format.desc)
 		.setClass("cna-settings-item")
 		.addText((text) =>
 			text
@@ -96,21 +77,17 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 				}),
 		);
 
-	createSettingsSectionHeading(panelEl, ctx.t("settings.other.section.timeline"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.timeline);
 
 	new Setting(panelEl)
-		.setName(ctx.t("settings.timeline.enable.name"))
-		.setDesc(ctx.t("settings.timeline.enable.desc"))
+		.setName(LocalizationConstants.settings.other.timeline.enable.name)
+		.setDesc(LocalizationConstants.settings.other.timeline.enable.desc)
 		.setClass("cna-settings-item")
 		.addToggle((toggle) =>
 			toggle.setValue(ctx.settings.timelineEnabled).onChange(async (value) => {
 				await ctx.setSettings({ timelineEnabled: value });
 			}),
 		);
-}
-
-function isSupportedLocale(value: string): value is SupportedLocale {
-	return value === "zh_cn" || value === "zh_tw";
 }
 
 function resolveChapterNameFormat(rawValue: string): string {

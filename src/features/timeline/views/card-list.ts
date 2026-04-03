@@ -1,5 +1,5 @@
 import { Notice, type App } from "obsidian";
-import type { TranslationKey } from "../../../lang";
+
 import { closeTimelineCardMenu } from "./card-menu";
 import { renderTimelineCardItem } from "./card-item";
 import type { TimelineCard } from "./types";
@@ -23,7 +23,7 @@ export interface TimelineCardListController {
 interface TimelineCardListDeps {
 	app: App;
 	containerEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	getSettings: () => SettingDatas;
 	novelLibraryService: NovelLibraryService;
 	getTimelineRootPaths: () => string[];

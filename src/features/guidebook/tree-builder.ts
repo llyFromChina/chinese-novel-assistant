@@ -37,7 +37,7 @@ export interface GuidebookTreeData {
 
 type GuidebookTreeBuildSettings = Pick<
 	SettingDatas,
-	"locale" | "novelLibraries" | "guidebookCollectionOrders"
+	"novelLibraries" | "guidebookCollectionOrders"
 >;
 
 interface GuidebookTreeFileBucket extends GuidebookTreeFileNode {
@@ -242,7 +242,3 @@ function pruneGuidebookFileParseCache(guidebookRootPath: string, activeGuidebook
 		}
 	}
 }
-
-
-
-

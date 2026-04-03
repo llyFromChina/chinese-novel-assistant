@@ -11,7 +11,7 @@ interface SnippetLibrarySnapshot {
 }
 
 interface QuerySnippetFragmentsOptions {
-	settings: Pick<SettingDatas, "locale" | "novelLibraries">;
+	settings: Pick<SettingDatas, "novelLibraries">;
 	libraryPath: string;
 	query: string;
 }
@@ -83,7 +83,7 @@ export class SnippetFragmentService {
 	}
 
 	private async ensureLibrarySnapshot(
-		settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		libraryPath: string,
 	): Promise<SnippetLibrarySnapshot> {
 		const normalizedLibraryPath = this.novelLibraryService.normalizeVaultPath(libraryPath);
@@ -103,7 +103,7 @@ export class SnippetFragmentService {
 	}
 
 	private async buildLibrarySnapshot(
-		settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		libraryPath: string,
 	): Promise<SnippetLibrarySnapshot> {
 		const snippetRoot = this.novelLibraryService.resolveNovelLibrarySubdirPath(libraryPath,
@@ -193,7 +193,7 @@ export class SnippetFragmentService {
 
 	private isSnippetMarkdownPath(
 		path: string,
-		settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 	): boolean {
 		const normalizedPath = this.novelLibraryService.normalizeVaultPath(path);
 		if (!normalizedPath || !normalizedPath.toLowerCase().endsWith(".md")) {
@@ -205,7 +205,7 @@ export class SnippetFragmentService {
 	}
 
 	private resolveSnippetRoots(
-		settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 	): string[] {
 		const roots: string[] = [];
 		for (const libraryPath of settings.novelLibraries) {
@@ -221,11 +221,11 @@ export class SnippetFragmentService {
 	}
 
 	private createCacheKey(
-		settings: Pick<SettingDatas, "locale">,
+		settings: Pick<SettingDatas, "novelLibraries">,
 		normalizedLibraryPath: string,
 	): string {
 		const normalizedSnippetDirName = this.novelLibraryService.normalizeVaultPath(NOVEL_LIBRARY_SUBDIR_NAMES.snippet);
-		return `${settings.locale}::${normalizedLibraryPath}::${normalizedSnippetDirName}`;
+		return `${normalizedLibraryPath}::${normalizedSnippetDirName}`;
 	}
 
 	private createEmptySnapshot(): SnippetLibrarySnapshot {
@@ -252,8 +252,3 @@ export class SnippetFragmentService {
 		return path === root || path.startsWith(`${root}/`);
 	}
 }
-
-
-
-
-

@@ -1,5 +1,6 @@
 import { Notice, Setting, TFolder } from "obsidian";
 import { NovelLibraryService } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { askForConfirmation, attachFolderSuggest } from "../../../ui";
 import { createSettingsSectionHeading } from "./heading";
 import type { SettingsTabRenderContext } from "./types";
@@ -11,16 +12,16 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 	const novelLibraryService = new NovelLibraryService(app);
 	const normalizedLibraryRoots = novelLibraryService.normalizeLibraryRoots(ctx.settings.novelLibraries);
 	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
-	createSettingsSectionHeading(panelEl, ctx.t("settings.global.section.novel_library"));
+	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.global.section.novel_library);
 
 	let pendingValue = "";
 	let pendingInputEl: HTMLInputElement | null = null;
 	new Setting(panelEl)
-		.setName(ctx.t("settings.global.novel_library.add.name"))
-		.setDesc(ctx.t("settings.global.novel_library.add.desc"))
+		.setName(LocalizationConstants.settings.global.novel_library.add.name)
+		.setDesc(LocalizationConstants.settings.global.novel_library.add.desc)
 		.setClass("cna-settings-item")
 		.addText((text) => {
-			text.setPlaceholder(ctx.t("settings.global.novel_library.add.placeholder"));
+			text.setPlaceholder(LocalizationConstants.settings.global.novel_library.add.placeholder);
 			pendingInputEl = text.inputEl;
 			text.onChange((value) => {
 				pendingValue = value;
@@ -28,7 +29,7 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 		})
 		.addButton((button) =>
 			button
-				.setButtonText(ctx.t("settings.common.add"))
+				.setButtonText(LocalizationConstants.settings.common.add)
 				.setCta()
 				.onClick(async () => {
 					const next = pendingValue.trim();
@@ -37,7 +38,7 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 					}
 
 					if (novelLibraryService.hasNovelLibrary(ctx.settings.novelLibraries, next)) {
-						new Notice(ctx.t("settings.global.novel_library.exists"));
+						new Notice(LocalizationConstants.settings.global.novel_library.exists);
 						return;
 					}
 
@@ -45,7 +46,7 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 						await novelLibraryService.ensureNovelLibraryStructure(next);
 					} catch (error) {
 						console.error("[Chinese Novel Assistant] Failed to create novel library structure.", error);
-						new Notice(ctx.t("settings.global.novel_library.create_subdirs_failed"));
+						new Notice(LocalizationConstants.settings.global.novel_library.create_subdirs_failed);
 						return;
 					}
 
@@ -70,12 +71,12 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 			.setName(libraryPath)
 			.setClass("cna-settings-item")
 			.addButton((button) => {
-				button.setButtonText(ctx.t("settings.common.delete")).onClick(async () => {
+				button.setButtonText(LocalizationConstants.settings.common.delete).onClick(async () => {
 					const shouldDelete = await askForConfirmation(app, {
-						title: ctx.t("settings.global.novel_library.delete_confirm.title"),
-						message: ctx.t("settings.global.novel_library.delete_confirm.message"),
-						confirmText: ctx.t("settings.common.delete"),
-						cancelText: ctx.t("settings.common.cancel"),
+						title: LocalizationConstants.settings.global.novel_library.delete_confirm.title,
+						message: LocalizationConstants.settings.global.novel_library.delete_confirm.message,
+						confirmText: LocalizationConstants.settings.common.delete,
+						cancelText: LocalizationConstants.settings.common.cancel,
 						confirmIsDanger: true,
 					});
 					if (!shouldDelete) {
@@ -104,7 +105,7 @@ function appendMissingNovelLibraryTag(deps: SettingsTabRenderContext, setting: S
 
 	nameEl.createSpan({
 		cls: "cna-settings-missing-library",
-		text: deps.ctx.t("settings.global.novel_library.missing"),
+		text: LocalizationConstants.settings.global.novel_library.missing,
 	});
 }
 
@@ -130,8 +131,3 @@ function isFeatureLibraryPath(path: string): boolean {
 		.filter((segment) => segment.length > 0)
 		.some((segment) => NOVEL_LIBRARY_FEATURE_DIR_NAMES.has(segment.toLowerCase()));
 }
-
-
-
-
-

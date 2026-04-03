@@ -1,6 +1,6 @@
 import { Component, MarkdownRenderer, setIcon, TextAreaComponent, type App } from "obsidian";
 import { UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
+
 import { extractPlainTextFromMarkdown, toRgba } from "../../../utils";
 import { applyAnnotationCardMenuCommand } from "../menu-actions";
 import { applyStickyNoteRichTextCommand } from "../../sticky-note/menu-actions";
@@ -12,7 +12,7 @@ interface AnnotationCardItemDeps {
 	app: App;
 	containerEl: HTMLElement;
 	card: AnnotationCard;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	isActive: boolean;
 	onCardTouched: () => void;
 	onCardDelete: () => void;
@@ -245,7 +245,3 @@ function applyCardTone(rootEl: HTMLElement, colorHex?: string): void {
 	rootEl.style.setProperty("--cna-annotation-card-accent", colorHex);
 	rootEl.style.setProperty("--cna-annotation-card-accent-alpha", toRgba(colorHex, 0.25));
 }
-
-
-
-

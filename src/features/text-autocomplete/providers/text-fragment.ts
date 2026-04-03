@@ -45,7 +45,7 @@ export function createTextFragmentAutocompleteExt(
 
 function resolveLibraryContext(
 	filePath: string,
-	settings: Pick<SettingDatas, "locale" | "novelLibraries">,
+	settings: Pick<SettingDatas, "novelLibraries">,
 	novelLibraryService: NovelLibraryService,
 ): { libraryPath: string } | null {
 	// 根据文件路径定位其所属小说库。
@@ -80,5 +80,3 @@ function resolveInsertion(content: string): { insertText: string; cursorOffset: 
 		cursorOffset: firstPlaceholderIndex,
 	};
 }
-
-

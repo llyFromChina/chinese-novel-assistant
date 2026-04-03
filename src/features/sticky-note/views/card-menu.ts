@@ -1,12 +1,12 @@
 import { setIcon } from "obsidian";
 import { STICKY_NOTE_COLORS, UI } from "../../../core";
 import { toRgba } from "../../../utils";
-import type { TranslationKey } from "../../../lang";
+
 import type { StickyNoteCardMenuCommand } from "../menu-actions";
 
 interface ShowStickyNoteCardMenuArgs {
 	anchorEl: HTMLElement;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	activeColorHex?: string;
 	isPinned: boolean;
 	allowPinToggle?: boolean;
@@ -154,4 +154,3 @@ function positionMenu(menuEl: HTMLElement, anchorRect: DOMRect): void {
 		top: `${top}px`,
 	});
 }
-

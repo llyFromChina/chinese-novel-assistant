@@ -1,6 +1,6 @@
 import { Component, MarkdownRenderer, Notice, setIcon, TextAreaComponent, type App, type TFile } from "obsidian";
 import { UI } from "../../../core";
-import type { TranslationKey } from "../../../lang";
+
 import type { StickyNoteCard, StickyNoteSortMode, StickyNoteViewOptions } from "./types";
 import {
 	STICKY_NOTE_FLOAT_DEFAULT_HEIGHT,
@@ -21,7 +21,7 @@ interface StickyNoteCardItemDeps {
 	card: StickyNoteCard;
 	sortMode: StickyNoteSortMode;
 	viewOptions: StickyNoteViewOptions;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	onCardTouched: () => void;
 	onImageExpandedChange?: (isExpanded: boolean) => void;
 	onCardDelete: () => void;
@@ -871,13 +871,3 @@ function extractPlainTextForCaretMapping(markdown: string): string {
 		.replace(/^\n+/, "")
 		.replace(/\n+$/, "");
 }
-
-
-
-
-
-
-
-
-
-

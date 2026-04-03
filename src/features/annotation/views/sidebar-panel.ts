@@ -1,5 +1,7 @@
 import { MarkdownView, Notice, TFile, TFolder, setIcon, type EventRef, type TAbstractFile } from "obsidian";
 import { UI, type PluginContext, NovelLibraryService } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
+import { getLocalizedString } from "../../../utils/localization-helper";
 import { ClearableInputComponent, showContextMenuAtMouseEvent } from "../../../ui";
 import { areStringArraysEqual, openMarkdownFileWithoutDuplicate, resolveEditorViewFromMarkdownView } from "../../../utils";
 import { AnnotationRepository } from "../repository";
@@ -54,7 +56,7 @@ export function renderAnnotationSidebarPanel(containerEl: HTMLElement, ctx: Plug
 	const cardList = createAnnotationCardList({
 		app: ctx.app,
 		containerEl: listWrapEl,
-		t: (key) => ctx.t(key),
+		t: (key) => getLocalizedString(key),
 		getSettings: () => ctx.settings,
 		getAnnotationRootPaths: () => annotationRootPaths,
 		onCountChange: (stats) => {
@@ -346,7 +348,7 @@ export function renderAnnotationSidebarPanel(containerEl: HTMLElement, ctx: Plug
 	const openFilterMenu = (event: MouseEvent): void => {
 		showContextMenuAtMouseEvent(event, [
 			...ANNOTATION_COLOR_TYPES.map((colorType) => ({
-				title: ctx.t(colorType.labelKey),
+				title: getLocalizedString(colorType.labelKey),
 				colorHex: colorType.colorHex,
 				checked: colorFilters.has(colorType.colorHex),
 				section: ANNOTATION_FILTER_MENU_SECTION,
@@ -362,32 +364,32 @@ export function renderAnnotationSidebarPanel(containerEl: HTMLElement, ctx: Plug
 					applyAutoLocate();
 				},
 			})),
-			{ kind: "separator" },
-			{
-				title: ctx.t("feature.annotation.filter.current_file"),
-				icon: UI.ICON.FILE,
-				checked: onlyCurrentSourceFilterEnabled,
-				section: ANNOTATION_FILTER_SCOPE_MENU_SECTION,
-				onClick: () => {
-					onlyCurrentSourceFilterEnabled = !onlyCurrentSourceFilterEnabled;
-					applyOnlyCurrentSourceFilter();
-					applyAutoLocate();
-					scheduleSyncActiveCardByEditorCursor();
-				},
+		{ kind: "separator" },
+		{
+			title: LocalizationConstants.feature.annotation.filter.current_file,
+			icon: UI.ICON.FILE,
+			checked: onlyCurrentSourceFilterEnabled,
+			section: ANNOTATION_FILTER_SCOPE_MENU_SECTION,
+			onClick: () => {
+				onlyCurrentSourceFilterEnabled = !onlyCurrentSourceFilterEnabled;
+				applyOnlyCurrentSourceFilter();
+				applyAutoLocate();
+				scheduleSyncActiveCardByEditorCursor();
 			},
-			{
-				title: ctx.t("feature.annotation.filter.clear"),
-				icon: UI.ICON.CLEAN,
-				disabled: colorFilters.size === 0 && !onlyCurrentSourceFilterEnabled,
-				onClick: () => {
-					colorFilters = new Set();
-					onlyCurrentSourceFilterEnabled = false;
-					cardList.setColorFilters([]);
-					applyOnlyCurrentSourceFilter();
-					applyAutoLocate();
-					scheduleSyncActiveCardByEditorCursor();
-				},
+		},
+		{
+			title: LocalizationConstants.feature.annotation.filter.clear,
+			icon: UI.ICON.CLEAN,
+			disabled: colorFilters.size === 0 && !onlyCurrentSourceFilterEnabled,
+			onClick: () => {
+				colorFilters = new Set();
+				onlyCurrentSourceFilterEnabled = false;
+				cardList.setColorFilters([]);
+				applyOnlyCurrentSourceFilter();
+				applyAutoLocate();
+				scheduleSyncActiveCardByEditorCursor();
 			},
+		},
 		], {
 			menuClassName: "cna-annotation-filter-menu",
 			keepInViewport: true,
@@ -447,9 +449,9 @@ export function renderAnnotationSidebarPanel(containerEl: HTMLElement, ctx: Plug
 
 	const updateLocalizedText = (): void => {
 		updateTitleText();
-		searchInputEl?.setAttr("placeholder", ctx.t("feature.annotation.search.placeholder"));
-		searchClearButtonEl?.setAttr("aria-label", ctx.t("feature.annotation.search.clear"));
-		filterButtonEl.setAttr("aria-label", ctx.t("feature.annotation.filter.tooltip"));
+		searchInputEl?.setAttr("placeholder", LocalizationConstants.feature.annotation.search.placeholder);
+		searchClearButtonEl?.setAttr("aria-label", LocalizationConstants.feature.annotation.search.clear);
+		filterButtonEl.setAttr("aria-label", LocalizationConstants.feature.annotation.filter.tooltip);
 		cardList.rerender();
 	};
 
@@ -492,7 +494,7 @@ export function renderAnnotationSidebarPanel(containerEl: HTMLElement, ctx: Plug
 async function locateCard(card: AnnotationCard, ctx: PluginContext): Promise<void> {
 	const file = ctx.app.vault.getAbstractFileByPath(card.sourcePath);
 	if (!(file instanceof TFile)) {
-		new Notice(ctx.t("feature.annotation.notice.source_missing"));
+		new Notice(LocalizationConstants.feature.annotation.notice.source_missing);
 		return;
 	}
 	const targetView = await openMarkdownFileWithoutDuplicate(ctx.app, file.path, false);
@@ -547,15 +549,14 @@ function resolveCurrentNovelLibraryName(
 		? filePath
 		: (ctx.app.workspace.getActiveFile()?.path ?? "");
 	if (!activeFilePath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const settings = ctx.settings;
 	const libraryRoots = novelLibraryService.normalizeLibraryRoots(settings.novelLibraries);
 	const matchedLibraryPath = novelLibraryService.resolveContainingLibraryRoot(activeFilePath, libraryRoots);
 	if (!matchedLibraryPath) {
-		return ctx.t("feature.guidebook.current_library.none");
+		return LocalizationConstants.feature.guidebook.current_library.none;
 	}
 	const segments = matchedLibraryPath.split("/").filter((segment) => segment.length > 0);
 	return segments[segments.length - 1] ?? matchedLibraryPath;
 }
-

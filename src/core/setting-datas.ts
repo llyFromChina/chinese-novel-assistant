@@ -1,5 +1,3 @@
-import type { SupportedLocale } from "../lang";
-
 export const DEFAULT_CHAPTER_NAME_FORMAT = "第{num}章 ";
 
 export interface SettingDatas {
@@ -59,7 +57,6 @@ export interface SettingDatas {
 	typesetJustifyText: boolean;
 
 	// 其他
-	locale: SupportedLocale;
 	openFileInNewTab: boolean;
 	chapterNameFormat: string;
 	enableCharacterCount: boolean;
@@ -121,7 +118,6 @@ export function createDefaultSettings(): SettingDatas {
 		typesetShowHeadingIcons: false,
 		typesetJustifyText: true,
 
-		locale: "zh_cn",
 		openFileInNewTab: true,
 		chapterNameFormat: DEFAULT_CHAPTER_NAME_FORMAT,
 		enableCharacterCount: true,
@@ -133,4 +129,3 @@ export function createDefaultSettings(): SettingDatas {
 		guidebookTreeAllExpanded: true,
 	};
 }
-

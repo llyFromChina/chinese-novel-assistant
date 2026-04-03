@@ -1,5 +1,6 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { UI, type PluginContext } from "../../../core";
+import { LocalizationConstants } from "../../../utils/localization-constants";
 import { renderGuidebookSidebarPanel } from "./sidebar-panel";
 
 export class GuidebookSidebarView extends ItemView {
@@ -17,7 +18,7 @@ export class GuidebookSidebarView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return this.ctx.t("feature.guidebook.tab.tooltip");
+		return LocalizationConstants.feature.guidebook.tab.tooltip;
 	}
 
 	getIcon(): string {
@@ -39,7 +40,3 @@ export class GuidebookSidebarView extends ItemView {
 		return Promise.resolve();
 	}
 }
-
-
-
-

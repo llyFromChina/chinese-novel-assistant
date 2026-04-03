@@ -81,7 +81,7 @@ export class NovelLibraryService {
 		return this.resolveContainingLibraryRoot(path, libraryRoots) !== null;
 	}
 
-	isInFeatureRoot(path: string, settings: Pick<SettingDatas, "locale" | "novelLibraries">): boolean {
+	isInFeatureRoot(path: string, settings: Pick<SettingDatas, "novelLibraries">): boolean {
 		const libraryRoot = this.resolveContainingLibraryRoot(path, settings.novelLibraries);
 		if (!libraryRoot) {
 			return false;
@@ -199,4 +199,3 @@ export class NovelLibraryService {
 		}
 	}
 }
-

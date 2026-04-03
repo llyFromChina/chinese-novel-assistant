@@ -1,5 +1,5 @@
 import { type App, Notice, TFile } from "obsidian";
-import type { TranslationKey } from "../../lang";
+
 import { type SettingDatas } from "../../core";
 import { areStringArraysEqual, clamp, splitLines } from "../../utils";
 import { GuidebookMarkdownParser } from "./markdown-parser";
@@ -40,7 +40,7 @@ export type GuidebookTreeDragMoveRequest =
 
 export interface GuidebookTreeDragSortContext {
 	app: App;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	treeData: GuidebookTreeData | null;
 	getSettings: () => SettingDatas;
 	setSettings: (patch: Partial<SettingDatas>) => Promise<void>;
@@ -395,8 +395,3 @@ function movePathInArray(
 	next.splice(insertIndex, 0, sourcePath);
 	return next;
 }
-
-
-
-
-

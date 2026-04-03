@@ -1,14 +1,14 @@
 import type { EditorView } from "@codemirror/view";
 import { Editor, MarkdownFileInfo, MarkdownView, Menu, MenuItem, setIcon, type Plugin } from "obsidian";
 import { UI, type SettingDatas } from "../../core";
-import type { TranslationKey } from "../../lang";
+
 import { resolveEditorViewFromMarkdownView } from "../../utils";
 import { appendGuidebookSettingToCategoryByPath } from "./menu-actions";
 import { buildGuidebookTreeData, type GuidebookTreeData } from "./tree-builder";
 
 interface TextMenuControllerOptions {
 	getSettings: () => SettingDatas;
-	t: (key: TranslationKey) => string;
+	t: (key: string) => string;
 	isGuidebookKeywordInEditor: (editorView: EditorView, keyword: string) => boolean;
 }
 
@@ -33,7 +33,7 @@ const MENU_REFRESH_DELAY = 120;
 export class TextMenuGuidebookController {
 	private readonly plugin: Plugin;
 	private readonly getSettings: () => SettingDatas;
-	private readonly t: (key: TranslationKey) => string;
+	private readonly t: (key: string) => string;
 	private readonly isGuidebookKeywordInEditor: (editorView: EditorView, keyword: string) => boolean;
 	private cachedTreeData: GuidebookTreeData | null = null;
 	private categoryPanelEl: HTMLElement | null = null;
@@ -525,9 +525,3 @@ function normalizeSelection(value: string): string {
 	}
 	return normalized;
 }
-
-
-
-
-
-
