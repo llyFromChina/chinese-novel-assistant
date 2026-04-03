@@ -1,0 +1,1 @@
+export { registerTypesetFeature } from "./register";

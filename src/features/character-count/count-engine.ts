@@ -1,0 +1,102 @@
+const FRONTMATTER_BLOCK_REGEX = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
+const HEADING_PREFIX_REGEX = /^[ \t]{0,3}#{1,6}[ \t]*/gm;
+const BLOCKQUOTE_PREFIX_REGEX = /^[ \t]*>[ \t]+/gm;
+const EMPTY_TASK_PREFIX_REGEX = /^[ \t]*-[ \t]+\[[ \t]\][ \t]*/gm;
+const ORDERED_LIST_PREFIX_REGEX = /^[ \t]*[+-]?\d+\.[ \t]+/gm;
+// ASCII letters/digits/punctuation run (excluding '-' to respect the "hyphen doesn't count" rule)
+const ASCII_RUN_REGEX = /[A-Za-z0-9\x21-\x2C\x2E-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]+/g;
+const WHITESPACE_AND_HYPHEN_REGEX = /[\s-]+/g;
+const EXCALIDRAW_FRONTMATTER_KEY_REGEX = /^\s*excalidraw-plugin\s*:/m;
+const COUNT_TOKEN = "¤";
+
+interface FrontmatterExtractionResult {
+	body: string;
+	frontmatter: string | null;
+	bodyStartLine: number;
+}
+
+function extractFrontmatter(content: string): FrontmatterExtractionResult {
+	const normalized = content.replace(/^\uFEFF/, "");
+	const match = normalized.match(FRONTMATTER_BLOCK_REGEX);
+	if (!match) {
+		return {
+			body: normalized,
+			frontmatter: null,
+			bodyStartLine: 1,
+		};
+	}
+	const consumedLineBreaks = (match[0].match(/\n/g) ?? []).length;
+
+	return {
+		body: normalized.slice(match[0].length),
+		frontmatter: match[1] ?? "",
+		bodyStartLine: consumedLineBreaks + 1,
+	};
+}
+
+export function hasExcalidrawFrontmatter(content: string): boolean {
+	const extracted = extractFrontmatter(content);
+	if (!extracted.frontmatter) {
+		return false;
+	}
+	return EXCALIDRAW_FRONTMATTER_KEY_REGEX.test(extracted.frontmatter);
+}
+
+export function countMarkdownCharacters(content: string): number {
+	if (!content) {
+		return 0;
+	}
+
+	const extracted = extractFrontmatter(content);
+	const withoutBlockquoteMarkers = extracted.body.replace(BLOCKQUOTE_PREFIX_REGEX, "");
+	const withoutTaskPrefixes = withoutBlockquoteMarkers.replace(EMPTY_TASK_PREFIX_REGEX, "");
+	const withoutHeadingMarkers = withoutTaskPrefixes.replace(HEADING_PREFIX_REGEX, "");
+	const orderedListCollapsed = withoutHeadingMarkers.replace(ORDERED_LIST_PREFIX_REGEX, COUNT_TOKEN);
+	const asciiRunsCollapsed = orderedListCollapsed.replace(ASCII_RUN_REGEX, COUNT_TOKEN);
+	const compacted = asciiRunsCollapsed.replace(WHITESPACE_AND_HYPHEN_REGEX, "");
+	return Array.from(compacted).length;
+}
+
+export interface CharacterMilestoneLine {
+	lineNumber: number;
+	milestone: number;
+}
+
+export function resolveCharacterMilestoneLines(content: string, milestoneStep = 500): CharacterMilestoneLine[] {
+	if (!content || milestoneStep <= 0 || hasExcalidrawFrontmatter(content)) {
+		return [];
+	}
+
+	const extracted = extractFrontmatter(content);
+	const bodyLines = extracted.body.split(/\r?\n/);
+	const totalLines = content.split(/\r?\n/).length;
+	let cumulative = 0;
+	let nextMilestone = milestoneStep;
+	const milestoneByLine = new Map<number, number>();
+
+	for (let index = 0; index < bodyLines.length; index += 1) {
+		const line = bodyLines[index] ?? "";
+		cumulative += countMarkdownCharactersInLine(line);
+		while (cumulative >= nextMilestone) {
+			const milestoneLine = extracted.bodyStartLine + index + 1;
+			if (milestoneLine <= totalLines) {
+				milestoneByLine.set(milestoneLine, nextMilestone);
+			}
+			nextMilestone += milestoneStep;
+		}
+	}
+
+	return Array.from(milestoneByLine.entries())
+		.sort((left, right) => left[0] - right[0])
+		.map(([lineNumber, milestone]) => ({ lineNumber, milestone }));
+}
+
+function countMarkdownCharactersInLine(line: string): number {
+	const withoutBlockquoteMarkers = line.replace(/^[ \t]*>[ \t]+/, "");
+	const withoutTaskPrefixes = withoutBlockquoteMarkers.replace(/^[ \t]*-[ \t]+\[[ \t]\][ \t]*/, "");
+	const withoutHeadingMarkers = withoutTaskPrefixes.replace(/^[ \t]{0,3}#{1,6}[ \t]*/, "");
+	const orderedListCollapsed = withoutHeadingMarkers.replace(/^[ \t]*[+-]?\d+\.[ \t]+/, COUNT_TOKEN);
+	const asciiRunsCollapsed = orderedListCollapsed.replace(ASCII_RUN_REGEX, COUNT_TOKEN);
+	const compacted = asciiRunsCollapsed.replace(WHITESPACE_AND_HYPHEN_REGEX, "");
+	return Array.from(compacted).length;
+}
