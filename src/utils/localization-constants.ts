@@ -23,7 +23,7 @@ export const LocalizationConstants = {
       sticky_note: "便签",
       proofread: "纠错",
       snippet: "补全",
-      typeset: "排版",
+      typeset: "正文",
       other: "其他",
       coming_soon: "该功能开发中。"
     },
@@ -32,6 +32,10 @@ export const LocalizationConstants = {
         custom_dirs: "自定义目录"
       },
       custom_dirs: {
+        novel: {
+          name: "小说正文目录",
+          desc: "小说正文的自定义目录路径，相对于 Obsidian 根仓库目录。可设置多个目录，用逗号分隔。未配置等于未开启正文相关功能"
+        },
         guidebook: {
           name: "设定库目录",
           desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"

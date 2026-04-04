@@ -1,13 +1,14 @@
 export const DEFAULT_CHAPTER_NAME_FORMAT = "第{num}章 ";
 
 export interface SettingDatas {
-	// 全局
-	guidebookCustomDir: string;
-	stickyNoteCustomDir: string;
-	annotationCustomDir: string;
-	timelineCustomDir: string;
-	snippetCustomDir: string;
-	proofreadDictionaryCustomDir: string;
+  // 全局
+  novelCustomDir: string;
+  guidebookCustomDir: string;
+  stickyNoteCustomDir: string;
+  annotationCustomDir: string;
+  timelineCustomDir: string;
+  snippetCustomDir: string;
+  proofreadDictionaryCustomDir: string;
 
 	// 设定
 	guidebookKeywordHighlightMode: "first" | "all";
@@ -76,13 +77,14 @@ export interface SettingDatas {
 }
 
 export function createDefaultSettings(): SettingDatas {
-	return {
-		guidebookCustomDir: "",
-		stickyNoteCustomDir: "",
-		annotationCustomDir: "",
-		timelineCustomDir: "",
-		snippetCustomDir: "",
-		proofreadDictionaryCustomDir: "",
+  return {
+    novelCustomDir: "",
+    guidebookCustomDir: "",
+    stickyNoteCustomDir: "",
+    annotationCustomDir: "",
+    timelineCustomDir: "",
+    snippetCustomDir: "",
+    proofreadDictionaryCustomDir: "",
 
 		guidebookKeywordHighlightMode: "first",
 		guidebookKeywordHighlightBackgroundColor: "#FFFFFF00",

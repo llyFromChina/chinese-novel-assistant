@@ -9,6 +9,19 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.global.section.custom_dirs);
 
 	new Setting(panelEl)
+		.setName(LocalizationConstants.settings.global.custom_dirs.novel.name)
+		.setDesc(LocalizationConstants.settings.global.custom_dirs.novel.desc)
+		.setClass("cna-settings-item")
+		.addText((text) => {
+			text.setPlaceholder("例如：正文, 小说")
+			text.setValue(ctx.settings.novelCustomDir)
+			text.onChange(async (value) => {
+				await ctx.setSettings({ novelCustomDir: value.trim() });
+				refresh();
+			});
+		});
+
+	new Setting(panelEl)
 		.setName(LocalizationConstants.settings.global.custom_dirs.guidebook.name)
 		.setDesc(LocalizationConstants.settings.global.custom_dirs.guidebook.desc)
 		.setClass("cna-settings-item")

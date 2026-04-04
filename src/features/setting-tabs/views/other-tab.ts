@@ -19,46 +19,7 @@ export function renderOtherSettings(containerEl: HTMLElement, deps: SettingsTabR
 			}),
 		);
 
-	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.word_count);
 
-	new Setting(panelEl)
-		.setName(LocalizationConstants.settings.other.enable_character_count.name)
-		.setDesc(LocalizationConstants.settings.other.enable_character_count.desc)
-		.setClass("cna-settings-item")
-		.addToggle((toggle) =>
-			toggle.setValue(ctx.settings.enableCharacterCount).onChange(async (value) => {
-				await ctx.setSettings({ enableCharacterCount: value });
-				refresh();
-				}),
-		);
-
-	new Setting(panelEl)
-		.setName(LocalizationConstants.settings.other.enable_character_milestone.name)
-		.setDesc(LocalizationConstants.settings.other.enable_character_milestone.desc)
-		.setClass("cna-settings-item")
-		.setDisabled(!ctx.settings.enableCharacterCount)
-		.addToggle((toggle) =>
-			toggle
-				.setValue(ctx.settings.enableCharacterMilestone)
-				.setDisabled(!ctx.settings.enableCharacterCount)
-				.onChange(async (value) => {
-					await ctx.setSettings({ enableCharacterMilestone: value });
-				}),
-		);
-
-	new Setting(panelEl)
-		.setName(LocalizationConstants.settings.other.count_only_novel_library.name)
-		.setDesc(LocalizationConstants.settings.other.count_only_novel_library.desc)
-		.setClass("cna-settings-item")
-		.setDisabled(!ctx.settings.enableCharacterCount)
-		.addToggle((toggle) =>
-			toggle
-				.setValue(ctx.settings.countOnlyNovelLibrary)
-				.setDisabled(!ctx.settings.enableCharacterCount)
-				.onChange(async (value) => {
-					await ctx.setSettings({ countOnlyNovelLibrary: value });
-				}),
-		);
 
 	createSettingsSectionHeading(panelEl, LocalizationConstants.settings.other.section.generate_chapter);
 
