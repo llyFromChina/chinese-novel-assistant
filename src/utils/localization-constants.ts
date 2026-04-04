@@ -34,27 +34,27 @@ export const LocalizationConstants = {
       custom_dirs: {
         guidebook: {
           name: "设定库目录",
-          desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         },
         sticky_note: {
           name: "便签库目录",
-          desc: "便签库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "便签库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         },
         annotation: {
           name: "批注库目录",
-          desc: "批注库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "批注库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         },
         timeline: {
           name: "时间轴库目录",
-          desc: "时间轴库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "时间轴库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         },
         snippet: {
           name: "片段库目录",
-          desc: "片段库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "片段库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         },
         proofread_dictionary: {
           name: "纠错词库目录",
-          desc: "纠错词库的自定义目录路径，相对于 Obsidian 根仓库目录"
+          desc: "纠错词库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
         }
       }
     },
