@@ -34,31 +34,31 @@ export const LocalizationConstants = {
       custom_dirs: {
         novel: {
           name: "小说正文目录",
-          desc: "小说正文的自定义目录路径，相对于 Obsidian 根仓库目录。可设置多个目录，用逗号分隔。未配置等于未开启正文相关功能"
+          desc: "小说正文的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         guidebook: {
           name: "设定库目录",
-          desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "设定库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         sticky_note: {
           name: "便签库目录",
-          desc: "便签库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "便签库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         annotation: {
           name: "批注库目录",
-          desc: "批注库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "批注库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         timeline: {
           name: "时间轴库目录",
-          desc: "时间轴库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "时间轴库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         snippet: {
           name: "片段库目录",
-          desc: "片段库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "片段库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         },
         proofread_dictionary: {
           name: "纠错词库目录",
-          desc: "纠错词库的自定义目录路径，相对于 Obsidian 根仓库目录。未配置等于未开启此功能"
+          desc: "纠错词库的自定义目录路径，相对于 Obsidian 根仓库目录。"
         }
       }
     },
