@@ -9,7 +9,7 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 
 	// 添加提示框
 	const infoBox = panelEl.createDiv({cls: "cna-settings-info-box"});
-	infoBox.textContent = "未配置目录等于未开启相应功能，每个配置项可以选择多个目录！！！";
+	infoBox.textContent = "未配置目录等于未开启相应功能，每个配置目录只能配置相对于 Obsidian 仓库根目录的相对目录！！！";
 	infoBox.style.padding = "10px";
 	infoBox.style.marginBottom = "15px";
 	infoBox.style.backgroundColor = "rgb(252, 246, 237)";
