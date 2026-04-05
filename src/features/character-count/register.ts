@@ -31,7 +31,7 @@ export function registerCharacterCountFeature(plugin: Plugin, ctx: PluginContext
 }
 
 class CharacterCountFeature {
-	private plugin: Plugin;
+	private readonly plugin: Plugin;
 	private ctx: PluginContext;
 	private novelLibraryService: NovelLibraryService;
 	private statusBarEl: HTMLElement;
@@ -304,14 +304,9 @@ class CharacterCountFeature {
 	}
 
 	private buildScope(settings: SettingDatas): CountScope {
-		// 使用所有自定义目录作为库根路径
+		// 只使用小说正文目录作为库根路径
 		const libraryRoots = [
-			settings.guidebookCustomDir,
-			settings.stickyNoteCustomDir,
-			settings.annotationCustomDir,
-			settings.timelineCustomDir,
-			settings.snippetCustomDir,
-			settings.proofreadDictionaryCustomDir,
+			settings.novelCustomDir,
 		].filter((dir): dir is string => !!dir);
 
 		const excludedRootsByLibrary = new Map<string, string[]>();
