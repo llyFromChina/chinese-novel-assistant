@@ -1,5 +1,5 @@
 import {type App, Component, MarkdownRenderer, setIcon} from "obsidian";
-import type {GuidebookKeywordPreviewItem} from "../../../features/text-detection/rules/guidebook-keyword";
+import type {GuidebookKeywordPreviewItem} from "../../text-detection/rules/guidebook-keyword";
 import {UI} from "../../../core";
 import {clamp} from "../../../utils";
 import {LocalizationConstants} from "../../../utils/localization-constants";
@@ -23,10 +23,10 @@ export interface GuidebookPreviewPopoverRenderContext {
 
 
 
-const PREVIEW_MIN_WIDTH = 200;
-const PREVIEW_MAX_WIDTH = 800;
+const PREVIEW_MIN_WIDTH = 300;
+const PREVIEW_MAX_WIDTH = 1200;
 const PREVIEW_MIN_LINES = 1;
-const PREVIEW_MAX_LINES = 30;
+const PREVIEW_MAX_LINES = 45;
 
 export class GuidebookPreviewPopover {
 	private readonly rootEl: HTMLElement;
@@ -114,7 +114,7 @@ export class GuidebookPreviewPopover {
 
 		this.currentPreviewItem = previewItem;
 		const parsed = parseAliasesAndContent(
-			typeof previewItem.content === "string" ? previewItem.content : "",
+			previewItem.content,
 			previewItem.title,
 			options.enableWesternNameAutoAlias,
 		);
@@ -274,23 +274,22 @@ function parseAliasesAndContent(
 	content: string,
 	keyword: string,
 	enableWesternNameAutoAlias: boolean,
-): { aliases: string[]; content: string; status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null } {
+): { aliases: string[]; content: string; status: "死亡" | "失效" | null } {
 	const lines = content.split(/\r?\n/);
 	const keptLines: string[] = [];
-	let status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null = null;
+	let status: "死亡" | "失效" | null = null;
 	for (const line of lines) {
-		const statusMatch = line.match(/ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â§Ãƒâ€¦Ã‚Â Ãƒâ€šÃ‚Â¶ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“\s*[:ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¼Ãƒâ€¦Ã‚Â¡]?\s*(ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡|ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â )/);
+		const statusMatch = line.match(/【状态】\s*[:：]?\s*(死亡|失效)/);
 		if (statusMatch && statusMatch[1] && !status) {
-			status = statusMatch[1] as "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ";
+			status = statusMatch[1] as "死亡" | "失效";
 		}
 		if (statusMatch) {
 			continue;
 		}
 
-		const aliasMatch = line.match(/ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¥Ãƒâ€¹Ã¢â‚¬Â Ãƒâ€šÃ‚Â«ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚ÂÃƒâ€šÃ‚ÂÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“\s*[:ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¼Ãƒâ€¦Ã‚Â¡]?\s*(.+)$/);
+		const aliasMatch = line.match(/【别名】\s*[:：]?\s*(.+)$/);
 		if (!aliasMatch) {
 			keptLines.push(line);
-			continue;
 		}
 	}
 	const normalizedLines = normalizeListBoundaryLines(keptLines);
@@ -328,9 +327,9 @@ function isMarkdownListItemLine(line: string): boolean {
 	return /^[-*+]\s+/.test(line) || /^\d+\.\s+/.test(line);
 }
 
-function formatPreviewTitle(baseTitle: string, status: "ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â­Ãƒâ€šÃ‚Â»ÃƒÆ’Ã‚Â¤Ãƒâ€šÃ‚ÂºÃƒâ€šÃ‚Â¡" | "ÃƒÆ’Ã‚Â¥Ãƒâ€šÃ‚Â¤Ãƒâ€šÃ‚Â±ÃƒÆ’Ã‚Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â " | null): string {
+function formatPreviewTitle(baseTitle: string, status: "死亡" | "失效" | null): string {
 	if (!status) {
 		return baseTitle;
 	}
-	return `${baseTitle}ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â${status}ÃƒÆ’Ã‚Â£ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‹Å“`;
+	return `${baseTitle}【${status}】`;
 }

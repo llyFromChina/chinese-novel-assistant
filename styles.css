@@ -606,7 +606,7 @@ body:has(.modal-container .modal) .cna-sticky-note-floating-window {
 }
 
 .cna-sticky-note-card__surface-display.markdown-rendered ul > li::before {
-	content: "â€¢ ";
+	content: "\2022 ";
 	position: absolute;
 	left: -4px;
 	top: 0;
@@ -1277,7 +1277,7 @@ button.cna-sticky-note-card__image-remove:hover {
 }
 
 .cna-guidebook-preview-popover__content.markdown-rendered ul > li::before {
-	content: "â€¢";
+	content: "\2022";
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -1324,7 +1324,7 @@ button.cna-sticky-note-card__image-remove:hover {
 }
 
 .menu-item.cna-text-menu-has-children::after {
-	content: "â€º";
+	content: "\203A";
 	position: absolute;
 	right: 8px;
 	top: 50%;
@@ -2132,7 +2132,7 @@ button.cna-sticky-note-card__image-remove:hover {
 }
 
 .cna-annotation-card__surface-display.markdown-rendered ul > li::before {
-	content: "â€¢ ";
+	content: "\2022 ";
 	position: absolute;
 	left: -4px;
 	top: 0;
@@ -2846,7 +2846,7 @@ button.cna-sticky-note-card__image-remove:hover {
 }
 
 .cna-timeline-card__surface-display.markdown-rendered ul > li::before {
-	content: "â€¢ ";
+	content: "\2022 ";
 	position: absolute;
 	left: -4px;
 	top: 0;
