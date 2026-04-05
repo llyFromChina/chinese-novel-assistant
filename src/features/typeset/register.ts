@@ -94,9 +94,16 @@ class TypesetFeature {
 		const settings = this.ctx.settings;
 		const rootEl = this.getRootEl();
 
-		rootEl.setAttribute(TYPESET_ENABLED_ATTR, settings.typesetEnabled ? "on" : "off");
-		rootEl.setAttribute(TYPESET_HEADING_ICONS_ATTR, settings.typesetShowHeadingIcons ? "on" : "off");
-		rootEl.setAttribute(TYPESET_JUSTIFY_ATTR, settings.typesetJustifyText ? "on" : "off");
+		// 检查当前打开的文件是否在正文目录中
+		const activeFile = this.plugin.app.workspace.getActiveFile();
+		const isInNovelDir = activeFile && settings.novelCustomDir && this.ctx.novelLibraryService.isPathInCustomDir(activeFile.path, settings.novelCustomDir);
+
+		// 只有在排版功能启用且文件在正文目录中时才应用排版
+		const shouldApplyTypeset = settings.typesetEnabled && isInNovelDir;
+
+		rootEl.setAttribute(TYPESET_ENABLED_ATTR, shouldApplyTypeset ? "on" : "off");
+		rootEl.setAttribute(TYPESET_HEADING_ICONS_ATTR, shouldApplyTypeset && settings.typesetShowHeadingIcons ? "on" : "off");
+		rootEl.setAttribute(TYPESET_JUSTIFY_ATTR, shouldApplyTypeset && settings.typesetJustifyText ? "on" : "off");
 
 		rootEl.style.setProperty(INDENT_CHARS_VAR, String(Math.max(0, settings.typesetIndentChars)));
 		rootEl.style.setProperty(LINE_SPACING_VAR, String(Math.max(0, settings.typesetLineSpacing)));
@@ -118,5 +125,3 @@ class TypesetFeature {
 		return workspaceContainerEl ?? document.body;
 	}
 }
-
-

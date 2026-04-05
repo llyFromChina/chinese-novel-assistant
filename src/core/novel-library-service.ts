@@ -60,13 +60,22 @@ export class NovelLibraryService {
 
 	// 检查路径是否在自定义目录中
 	isPathInCustomDir(path: string, customDir: string): boolean {
+		// 处理多个目录的情况，使用逗号分隔
+		if (customDir && customDir.includes(",")) {
+			const dirPathArr = customDir.split(",").map(it => it.trim()).filter(Boolean);
+			return dirPathArr.some(dir => this.isPathInCustomDir(path, dir));
+		}
+
+		// 规范化路径
 		const normalizedPath = this.normalizeVaultPath(path);
 		const normalizedCustomDir = this.getCustomDirPath(customDir);
 
+		// 验证路径有效性
 		if (!normalizedPath || !normalizedCustomDir) {
 			return false;
 		}
 
+		// 检查路径是否匹配
 		return normalizedPath === normalizedCustomDir || normalizedPath.startsWith(`${normalizedCustomDir}/`);
 	}
 

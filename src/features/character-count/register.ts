@@ -305,9 +305,9 @@ class CharacterCountFeature {
 
 	private buildScope(settings: SettingDatas): CountScope {
 		// 只使用小说正文目录作为库根路径
-		const libraryRoots = [
-			settings.novelCustomDir,
-		].filter((dir): dir is string => !!dir);
+		const libraryRoots =settings.novelCustomDir.split(",")
+			.map(x => x.trim())
+			.filter((dir): dir is string => !!dir);
 
 		const excludedRootsByLibrary = new Map<string, string[]>();
 		for (const libraryRoot of libraryRoots) {
