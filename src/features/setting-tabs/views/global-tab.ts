@@ -4,11 +4,11 @@ import type {SettingsTabRenderContext} from "./types";
 import {attachDirectoryPicker} from "../../../ui/componets/directory-picker";
 
 export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTabRenderContext): void {
-	const { app, ctx, refresh } = deps;
-	const panelEl = containerEl.createDiv({ cls: "cna-settings-panel" });
+	const {app, ctx, refresh} = deps;
+	const panelEl = containerEl.createDiv({cls: "cna-settings-panel"});
 
 	// 添加提示框
-	const infoBox = panelEl.createDiv({ cls: "cna-settings-info-box" });
+	const infoBox = panelEl.createDiv({cls: "cna-settings-info-box"});
 	infoBox.textContent = "未配置目录等于未开启相应功能，每个配置项可以选择多个目录！！！";
 	infoBox.style.padding = "10px";
 	infoBox.style.marginBottom = "15px";
@@ -21,21 +21,24 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 		settingName: string,
 		settingDesc: string,
 		currentValue: string,
-		settingKey: keyof typeof ctx.settings
+		settingKey: keyof typeof ctx.settings,
+		supportMultiple?: boolean
 	) {
 		const setting = new Setting(panelEl)
 			.setName(settingName)
 			.setDesc(settingDesc)
 			.setClass("cna-settings-item");
 
-		// 使用用户提供的目录选择器
+		// 使用目录选择器
 		attachDirectoryPicker(app, setting, {
 			value: currentValue,
 			onChange: async (value) => {
-				await ctx.setSettings({ [settingKey]: value });
+				console.log("目录选择器值变化. key:", settingKey, "value:", value);
+				await ctx.setSettings({[settingKey]: value});
 				refresh();
 			},
-			supportMultiple: true
+			getValue: () => ctx.settings[settingKey] as string,
+			supportMultiple: supportMultiple || false
 		});
 	}
 
@@ -44,7 +47,8 @@ export function renderGlobalSettings(containerEl: HTMLElement, deps: SettingsTab
 		LocalizationConstants.settings.global.custom_dirs.novel.name,
 		LocalizationConstants.settings.global.custom_dirs.novel.desc,
 		ctx.settings.novelCustomDir,
-		"novelCustomDir"
+		"novelCustomDir",
+		true
 	);
 
 	createDirectorySelector(
