@@ -68,14 +68,19 @@ export class DirectoryPicker {
 
 		directories.forEach(dir => {
 			const item = selectedList.createDiv({cls: "cna-directory-picker-selected-item"});
-			item.setText(dir);
+			
+			// 创建路径文本
+			const pathEl = item.createSpan({cls: "cna-directory-picker-path"});
+			pathEl.setText(dir);
 
-			const removeButton = item.createEl("button", {
+			// 创建删除按钮（链接样式）
+			const removeButton = item.createEl("a", {
 				text: "×",
 				cls: "cna-directory-picker-remove"
 			});
 
-			removeButton.addEventListener("click", () => {
+			removeButton.addEventListener("click", (e) => {
+				e.preventDefault();
 				const newDirectories = directories.filter(d => d !== dir);
 				const newValue = newDirectories.join(",");
 				this.value = newValue;
@@ -120,8 +125,13 @@ export function attachDirectoryPicker(
 	// 创建控制元素容器，放在 controlEl 中
 	const controlContainer = setting.controlEl.createDiv({cls: "cna-directory-picker-control"});
 
-	// 创建已选目录容器，放在 settingEl 中，控制元素的下方
+	// 创建已选目录容器，放在 settingEl 中，描述文本的下方
 	const selectedContainer = setting.settingEl.createDiv({cls: "cna-directory-picker-selected-container"});
+	// 确保容器在描述文本之后
+	const descriptionEl = setting.settingEl.querySelector(".setting-item-description");
+	if (descriptionEl) {
+		descriptionEl.after(selectedContainer);
+	}
 
 	return new DirectoryPicker({
 		app,
