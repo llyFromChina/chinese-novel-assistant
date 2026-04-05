@@ -280,6 +280,15 @@ class GuidebookTreeView implements GuidebookTreeViewComponent {
 				this.options.onH2ContextAction,
 			);
 		});
+		
+		// 添加双击事件监听
+		rowEl.addEventListener("dblclick", (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+			// 触发编辑设定的操作
+			this.options.onH2ContextAction?.("edit_setting", fileNode, h1Node, h2Node);
+		});
+		
 		this.bindDragAndDrop(rowEl, { kind: "h2", fileNode, h1Node, h2Node });
 	}
 
@@ -572,7 +581,3 @@ class GuidebookTreeView implements GuidebookTreeViewComponent {
 		return `${libraryRootPath}${STATE_KEY_SCOPE_SEPARATOR}h1:${h1Node.sourcePath}${STATE_KEY_PATH_SEPARATOR}${h1Node.title.trim()}`;
 	}
 }
-
-
-
-
